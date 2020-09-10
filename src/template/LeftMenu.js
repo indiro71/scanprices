@@ -16,6 +16,9 @@ function LeftMenu() {
                         <Link className={'collapsible-header'} to={'/add-good'}>Add good</Link>
                     </li>
                     <li className="bold waves-effect">
+                        <Link className={'collapsible-header'} to={'/shops'}>Shops</Link>
+                    </li>
+                    <li className="bold waves-effect">
                         <Link className={'collapsible-header'} to={'/add-shop'}>Add shop</Link>
                     </li>
                 </ul>

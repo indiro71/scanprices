@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { TextField, Snackbar, LinearProgress } from '@material-ui/core';
+import { Snackbar, LinearProgress } from '@material-ui/core';
 import { useHttp } from '../hooks/http.hook';
 
 export const AddGoodPage = () => {
@@ -37,11 +37,13 @@ export const AddGoodPage = () => {
                     <form className={"addgood"} onSubmit={handleSubmit(addGood)} noValidate autoComplete="off">
                         <div className="row">
                             <div className="input-field col s6">
-                                <input placeholder="Goood url" name="url" id="url" ref={register} type="text" className="validate"/>
-                                <label htmlFor="first_name">Goood url</label>
+                                <label htmlFor="url">Good url</label>
+                                <input  name="url" id="url" ref={register} type="text" className="validate"/>
                             </div>
                         </div>
-                        <input type="submit"/>
+                        <button className="btn waves-effect waves-light" type="submit" name="action">Add
+                            <i className="material-icons right"></i>
+                        </button>
                     </form>
                 </div>
             </div>
