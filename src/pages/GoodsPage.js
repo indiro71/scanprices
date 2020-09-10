@@ -17,6 +17,11 @@ export const GoodsPage = () => {
         } catch (e) {}
     }, []);
 
+    const deleteGood = async (deleteGoodId) => {
+        const deleted = await request(`/dev/scanprice/good/${deleteGoodId}`, 'DELETE');
+        fetchGoods();
+    }
+
     useEffect( () => {
         fetchGoods();
     }, []);
@@ -40,6 +45,9 @@ export const GoodsPage = () => {
                                     <span className="card-title center-align activator grey-text text-darken-4">{good.name}</span>
                                 </div>
                             </Link>
+                            <div className="card-action">
+                                <div  onClick={() => deleteGood(good._id)}>Delete</div>
+                            </div>
                         </div>
                     </div>
                 );

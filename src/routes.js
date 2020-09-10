@@ -3,7 +3,10 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { MainPage } from './pages/MainPage';
 import { GoodsPage } from './pages/GoodsPage';
 import { AddGoodPage } from './pages/AddGoodPage';
-import { DetailPage } from './pages/DetailPage';
+import { DetailGoodPage } from './pages/DetailGoodPage';
+import { ShopsPage } from './pages/ShopsPage';
+import { AddShopPage } from './pages/AddShopPage';
+import { DetailShopPage } from './pages/DetailShopPage';
 
 export const useRoutes = () => {
     return (
@@ -18,7 +21,17 @@ export const useRoutes = () => {
                 <AddGoodPage/>
             </Route>
             <Route path={"/good/:id"}>
-                <DetailPage />
+                <DetailGoodPage />
+            </Route>
+
+            <Route path={'/shops'} exact>
+                <ShopsPage/>
+            </Route>
+            <Route path={'/add-shop'} exact>
+                <AddShopPage/>
+            </Route>
+            <Route path={"/shop/:id"}>
+                <DetailShopPage />
             </Route>
 
             <Redirect to={'/'}/>

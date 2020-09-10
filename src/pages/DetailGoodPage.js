@@ -3,12 +3,12 @@ import {useParams} from 'react-router-dom';
 import { useHttp } from '../hooks/http.hook';
 import { LinearProgress } from '@material-ui/core';
 
-export const DetailPage = () => {
+export const DetailGoodPage = () => {
     const { loading, request } = useHttp();
     const [ good, setGood ] = useState([]);
     const goodId = useParams().id;
 
-    const fetchGoods = useCallback(async () => {
+    const fetchGood = useCallback(async () => {
         try {
             try {
                 const fetched = await request(`/dev/scanprice/good/${goodId}`, 'GET');
@@ -18,15 +18,14 @@ export const DetailPage = () => {
     }, []);
 
     useEffect( () => {
-        fetchGoods();
-    }, [fetchGoods]);
+        fetchGood();
+    }, [fetchGood]);
 
     return (
         <div className="masonry row">
-
+            <LinearProgress style={{ opacity: loading ? 1 : 0 }} />
             {good.params ?
                 <div className="row">
-                    <LinearProgress style={{ opacity: loading ? 1 : 0 }} />
                     <div className="col xl12">
                         <div className="card">
                             <div className="card-image">
