@@ -1,29 +1,27 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { DeveloperMode } from '@material-ui/icons';
+import { NavLink } from 'react-router-dom';
 
 function LeftMenu() {
     return (
-        <ul id="sidenav-left" className="sidenav sidenav-fixed">
-            <li><a href="/" className="logo-container">Admin<i
-                className="material-icons left"><DeveloperMode/></i></a></li>
-            <li className="no-padding">
-                <ul className="collapsible collapsible-accordion">
-                    <li className="bold waves-effect">
-                        <Link className={'collapsible-header'} to={'/goods'}>Goods</Link>
-                    </li>
-                    <li className="bold waves-effect">
-                        <Link className={'collapsible-header'} to={'/add-good'}>Add good</Link>
-                    </li>
-                    <li className="bold waves-effect">
-                        <Link className={'collapsible-header'} to={'/shops'}>Shops</Link>
-                    </li>
-                    <li className="bold waves-effect">
-                        <Link className={'collapsible-header'} to={'/add-shop'}>Add shop</Link>
-                    </li>
-                </ul>
+        <ul id="slide-out" className="sidenav sidenav-fixed">
+            <li>
+                <NavLink activeClassName='white-text grey darken-1' className={'collapsible-header bold waves-effect'} to={'/goods'}>Goods</NavLink>
+            </li>
+            <li>
+                <NavLink activeClassName='white-text grey darken-1' className={'collapsible-header bold waves-effect'} to={'/add-good'}>Add good</NavLink>
+            </li>
+            <li>
+                <div className="divider"></div>
+            </li>
+            <li>
+                <NavLink activeClassName='white-text grey darken-1' className={'collapsible-header bold waves-effect'} to={'/shops'}>Shops</NavLink>
+            </li>
+            <li>
+                <NavLink activeClassName='white-text grey darken-1' className={'collapsible-header bold waves-effect'} to={'/add-shop'}>Add shop</NavLink>
             </li>
         </ul>
+
+
     );
 }
 
