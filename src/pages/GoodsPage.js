@@ -2,11 +2,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useHttp } from '../hooks/http.hook';
 import { Link } from 'react-router-dom';
 import { LinearProgress } from '@material-ui/core';
+import { Table } from '../components/Table';
+import M from  'materialize-css/dist/js/materialize.min.js';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRubleSign } from '@fortawesome/free-solid-svg-icons'
 
 export const GoodsPage = () => {
     const { loading, request } = useHttp();
     const [ goods, setGoods ] = useState([]);
-
 
     const fetchGoods = useCallback(async () => {
         try {
@@ -26,32 +29,30 @@ export const GoodsPage = () => {
         fetchGoods();
     }, []);
 
-    return (
-        <div className="masonry row">
-            <LinearProgress style={{ opacity: loading ? 1 : 0 }} />
-            <div className="col s12">
-                <h2>Goods</h2>
-            </div>
+    useEffect( () => {
+        const tooltips = document.querySelectorAll('.tooltipped');
+        console.log(tooltips)
+        M.Tooltip.init(tooltips, {
+            'position': 'left'
+        })
+    }, [goods]);
 
-            {goods.map(good => {
-                return (
-                    <div className="col xl l4 m6 s12">
-                        <div className="card">
-                            <Link to={`/good/${good._id}`}>
-                                <div className="card-image waves-effect waves-block waves-light">
-                                    <img alt={good.name} className="activator" src={`${process.env.REACT_APP_STORAGE_SERVER}/images/${good.image}`}/>
-                                </div>
-                                <div className="card-content">
-                                    <span className="card-title center-align activator grey-text text-darken-4">{good.name}</span>
-                                </div>
-                            </Link>
-                            <div className="card-action">
-                                <div  onClick={() => deleteGood(good._id)}>Delete</div>
-                            </div>
-                        </div>
-                    </div>
-                );
-            })}
+    const headings = ['Name', 'Shop', 'Current price'];
+    const tableBody = goods.map(good => {
+        return [
+           <Link className="tooltipped"   data-tooltip={`<img style="max-width: 200px;" src=${process.env.REACT_APP_STORAGE_SERVER}/images/${good.image}/>`} to={`/good/${good._id}`}>{good.name}</Link>,
+           <a target="_blank" href={good.url}>{good.shop.name}</a>,
+           <span><b>{good.currentPrice}</b> <FontAwesomeIcon icon={faRubleSign} /></span>
+        ]
+    });
+
+
+    return (
+        <div className="row">
+            <LinearProgress style={{ opacity: loading ? 1 : 0 }} />
+            <h2>Goods</h2>
+
+            <Table headings={headings} tableBody={tableBody} />
         </div>
     );
 }
