@@ -39,10 +39,11 @@ export const GoodsPage = () => {
 
     const headings = ['Name', 'Shop', 'Current price'];
     const tableBody = goods.map(good => {
+        const price = +good.currentPrice !== 0 ? <span><b>{good.currentPrice}</b> <FontAwesomeIcon icon={faRubleSign} /></span>: 'not available';
         return [
            <Link className="tooltipped"   data-tooltip={`<img style="max-width: 200px;" src=${process.env.REACT_APP_STORAGE_SERVER}/images/${good.image}/>`} to={`/good/${good._id}`}>{good.name}</Link>,
            <a target="_blank" href={good.url}>{good.shop.name}</a>,
-           <span><b>{good.currentPrice}</b> <FontAwesomeIcon icon={faRubleSign} /></span>
+            price
         ]
     });
 
