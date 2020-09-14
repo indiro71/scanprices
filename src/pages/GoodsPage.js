@@ -31,7 +31,6 @@ export const GoodsPage = () => {
 
     useEffect( () => {
         const tooltips = document.querySelectorAll('.tooltipped');
-        console.log(tooltips)
         M.Tooltip.init(tooltips, {
             'position': 'left'
         })
