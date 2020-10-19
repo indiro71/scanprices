@@ -1,1 +1,1 @@
-# moved to [bitbucket](https://bitbucket.org/indiro71/scanprices/)
+# moved to [bitbucket](https://bitbucket.org/indiro/scanprices/)
