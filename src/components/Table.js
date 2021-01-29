@@ -4,16 +4,16 @@ export const Table = ({headings, tableBody}) => {
     return (
         <table className="highlight responsive-table">
             <thead>
-            <tr>
-            {headings.map(head => <th>{head}</th>)}
-            </tr>
+                <tr>
+                    {headings.map((head, index) => <th key={index}>{head}</th>)}
+                </tr>
             </thead>
 
             <tbody>
-            {tableBody.map(tableRow => {
+            {tableBody.map((tableRow, index) => {
                 return (
-                    <tr>
-                        {tableRow.map(rowItem => <td>{rowItem}</td>)}
+                    <tr key={index}>
+                        {tableRow.map((rowItem, index) => <td key={index}>{rowItem}</td>)}
                     </tr>
                 );
             })}

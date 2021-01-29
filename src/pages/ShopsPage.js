@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useHttp } from '../hooks/http.hook';
 import { Link } from 'react-router-dom';
 import { LinearProgress } from '@material-ui/core';
@@ -7,18 +7,15 @@ export const ShopsPage = () => {
     const { loading, request } = useHttp();
     const [ shops, setShops ] = useState([]);
 
-
     const fetchShops = useCallback(async () => {
         try {
-            try {
-                const fetched = await request(`/dev/scanprice/shops/`, 'GET');
-                setShops(fetched.shops);
-            } catch (e) {}
+            const fetched = await request(`/scanprices/shops/all/`, 'GET');
+            setShops(fetched.shops);
         } catch (e) {}
     }, []);
 
     const deleteShop = async ( deleteShopId) => {
-        const deleted = await request(`/dev/scanprice/shop/${deleteShopId}`, 'DELETE');
+        const deleted = await request(`/scanprices/shops/delete/${deleteShopId}`, 'DELETE');
         fetchShops();
     }
 

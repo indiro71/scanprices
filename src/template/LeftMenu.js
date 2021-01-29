@@ -1,27 +1,56 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 function LeftMenu() {
+    const [ filterMenu, setFilterMenu ] = useState([]);
+    const auth = useContext(AuthContext);
+    const menu = [
+        {
+            title: 'Main',
+            link: '/'
+        },
+        {
+            title: 'Auth',
+            link: 'Auth',
+            auth: false
+        },
+        {
+            title: 'Products',
+            link: '/products'
+        },
+        {
+            title: 'Add product',
+            link: '/add-product',
+            auth: true
+        },
+        {
+            title: 'Shops',
+            link: '/shops'
+        },
+        {
+            title: 'Add shop',
+            link: '/add-shop',
+            auth: true
+        }
+    ];
+
+    useEffect(() => {
+        if (auth.token) {
+            setFilterMenu(menu.filter(item => item.auth !== false));
+        } else {
+            setFilterMenu(menu.filter(item => item.auth !== true));
+        }
+    }, [ auth.token ]);
+
     return (
         <ul id="slide-out" className="sidenav sidenav-fixed">
-            <li>
-                <NavLink activeClassName='white-text grey darken-1' className={'collapsible-header bold waves-effect'} to={'/goods'}>Goods</NavLink>
-            </li>
-            <li>
-                <NavLink activeClassName='white-text grey darken-1' className={'collapsible-header bold waves-effect'} to={'/add-good'}>Add good</NavLink>
-            </li>
-            <li>
-                <div className="divider"></div>
-            </li>
-            <li>
-                <NavLink activeClassName='white-text grey darken-1' className={'collapsible-header bold waves-effect'} to={'/shops'}>Shops</NavLink>
-            </li>
-            <li>
-                <NavLink activeClassName='white-text grey darken-1' className={'collapsible-header bold waves-effect'} to={'/add-shop'}>Add shop</NavLink>
-            </li>
+            {filterMenu.map(item => (
+                <li>
+                    <NavLink className={'bold waves-effect'} to={item.link}>{item.title}</NavLink>
+                </li>
+            ))}
         </ul>
-
-
     );
 }
 
