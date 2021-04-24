@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import Layout from '@indiro/layout';
+import { Layout } from '@indiro/layout';
 import { AuthContext } from './context/AuthContext';
 import { useRoutes } from './routes';
 import { useAuth } from './hooks/auth.hook';
@@ -19,7 +19,7 @@ function App() {
     return (
         <AuthContext.Provider value={{ token, login, logout, isAuthenticated }}>
             <Router>
-                <Layout content={routes} leftMenu={LeftMenu}/>
+                <Layout content={routes} leftMenuItems={LeftMenu}/>
             </Router>
         </AuthContext.Provider>
     );
