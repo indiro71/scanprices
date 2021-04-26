@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useHttp } from '../hooks/http.hook';
-import { Table } from '../components/Table';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRubleSign } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { LinearProgress } from '@material-ui/core';
+import { faRubleSign } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useHttp } from '../hooks/http.hook';
+import { Table } from '../components/Table';
+import { BlockContent } from '../components/BlockContent';
 
 export const MainPage = () => {
-    const { loading, request } = useHttp();
+    const { request } = useHttp();
     const [ lastAddedProducts, setLastAddedProducts ] = useState([]);
     const [ lastUpdatedProducts, setLastUpdatedProducts ] = useState([]);
 
@@ -43,8 +43,8 @@ export const MainPage = () => {
         const price = +product.currentPrice !== 0 ?
             <span><b>{product.currentPrice}</b> <FontAwesomeIcon icon={faRubleSign}/></span> : 'not available';
         return [
-            <Link className="tooltipped" to={`/product/${product._id}`}>{product.name}</Link>,
-            <a target="_blank" href={product.url}>{product.shop.name}</a>,
+            <Link className="link" to={`/product/${product._id}`}>{product.name}</Link>,
+            <a className="link" target="_blank" href={product.url}>{product.shop.name}</a>,
             price,
             moment(product.dateCreate).format('DD-MM-YYYY HH:mm')
         ]
@@ -53,25 +53,20 @@ export const MainPage = () => {
     const tableUpdatedBody = lastUpdatedProducts.map(product => {
         const price = product.prices[1] ? product.prices[0]?.price - product.prices[1]?.price : product.prices[0]?.price;
         return [
-            <Link className="tooltipped" to={`/product/${product._id}`}>{product.name}</Link>,
+            <Link className="link" to={`/product/${product._id}`}>{product.name}</Link>,
             <span
-                className={moment().isSame(product.dateUpdate, 'day') ? 'flow-text' : ''}>{moment(product.dateUpdate).format('DD-MM-YYYY  HH:mm')}</span>,
-            <span><b className={price > 0 ? 'red-text' : 'green-text'}>{price}</b> <FontAwesomeIcon icon={faRubleSign}/></span>
+                className={moment().isSame(product.dateUpdate, 'day') ? 'text-xl' : ''}>{moment(product.dateUpdate).format('DD-MM-YYYY  HH:mm')}</span>,
+            <span><b className={price > 0 ? 'text-red-500' : 'text-green-500'}>{price}</b> <FontAwesomeIcon icon={faRubleSign}/></span>
         ]
     });
 
     return (
-        <div className="masonry row">
-            <LinearProgress style={{ opacity: loading ? 1 : 0 }}/>
-            <div className="col s12">
-                <h2>Scanprices</h2>
+        <BlockContent>
+            <div className="header-3">Last added products</div>
+            <Table headings={headAddedTable} tableBody={tableAddedBody}/>
 
-                <h4>Last added products</h4>
-                <Table headings={headAddedTable} tableBody={tableAddedBody}/>
-
-                <h4>Last updated products</h4>
-                <Table headings={headUpdatedTable} tableBody={tableUpdatedBody}/>
-            </div>
-        </div>
+            <div className="header-3">Last updated products</div>
+            <Table headings={headUpdatedTable} tableBody={tableUpdatedBody}/>
+        </BlockContent>
     );
 }

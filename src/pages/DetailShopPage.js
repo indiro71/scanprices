@@ -1,16 +1,18 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import {useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useHttp } from '../hooks/http.hook';
 import { LinearProgress, Snackbar } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
+import { BlockContent } from '../components/BlockContent';
+import { Button, Field } from '../components/form';
 
 export const DetailShopPage = () => {
     const { loading, request } = useHttp();
-    const [ shop, setShop ] = useState([]);
+    const [shop, setShop] = useState([]);
     const shopId = useParams().id;
-    const [ status, setStatus ] = useState('');
+    const [status, setStatus] = useState('');
     const { register: editShopForm, handleSubmit, setValue } = useForm();
-    const [ open, setOpen ] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const fetchShop = useCallback(async () => {
         try {
@@ -21,7 +23,8 @@ export const DetailShopPage = () => {
             setValue('tagPrices', fetched.data.params.tagPrices.join(', '));
             setValue('tagImage', fetched.data.params.tagImage);
             setValue('tagName', fetched.data.params.tagName);
-        } catch (e) {}
+        } catch (e) {
+        }
     }, [shopId, request]);
 
     const editShop = async (data) => {
@@ -36,61 +39,49 @@ export const DetailShopPage = () => {
         }
     };
 
-    useEffect( () => {
+    useEffect(() => {
         fetchShop();
     }, [fetchShop]);
 
     return (
-        <>
-            <LinearProgress style={{ opacity: loading ? 1 : 0 }}/>
+        <BlockContent>
             <Snackbar
                 open={open}
                 message={status}
             />
             {shop.params ?
-                <div className="masonry row">
-                    <div className="col s12">
-                        <h2>{shop.params.name}</h2>
-                        <form className={'editShop'} onSubmit={handleSubmit(editShop)} noValidate autoComplete="off">
-                            <div className="row">
-                                <div className="input-field col s6">
-                                    <label htmlFor="name">Shop name</label>
-                                    <input name="name" id="name" ref={editShopForm} type="text" className="validate"/>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="input-field col s6">
-                                    <label htmlFor="url">Shop url</label>
-                                    <input name="url" id="url" ref={editShopForm} type="text" className="validate"/>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="input-field col s6">
-                                    <label htmlFor="tagPrices">Price tags</label>
-                                    <input name="tagPrices" id="tagPrices" ref={editShopForm} type="text"
-                                           className="validate"/>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="input-field col s6">
-                                    <label htmlFor="tagImage">Image tag</label>
-                                    <input name="tagImage" id="tagImage" ref={editShopForm} type="text"
-                                           className="validate"/>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="input-field col s6">
-                                    <label htmlFor="tagName">Name tag</label>
-                                    <input name="tagName" id="tagName" ref={editShopForm} type="text" className="validate"/>
-                                </div>
-                            </div>
-                            <button className="btn waves-effect waves-light" type="submit" name="action">Edit
-                                <i className="material-icons right"></i>
-                            </button>
-                        </form>
-                    </div>
+                <div>
+                    <div className="header-2">{shop.params.name}</div>
+
+                    <form className="form" onSubmit={handleSubmit(editShop)} noValidate
+                          autoComplete="off">
+                        <Field>
+                            <label htmlFor="name">Shop name</label>
+                            <input name="name" id="name" ref={editShopForm} type="text" className="validate"/>
+                        </Field>
+                        <Field>
+                            <label htmlFor="url">Shop url</label>
+                            <input name="url" id="url" ref={editShopForm} type="text" className="validate"/>
+                        </Field>
+                        <Field>
+                            <label htmlFor="tagPrices">Price tags</label>
+                            <input name="tagPrices" id="tagPrices" ref={editShopForm} type="text"
+                                   className="validate"/>
+                        </Field>
+                        <Field>
+                            <label htmlFor="tagImage">Image tag</label>
+                            <input name="tagImage" id="tagImage" ref={editShopForm} type="text"
+                                   className="validate"/>
+                        </Field>
+                        <Field>
+                            <label htmlFor="tagName">Name tag</label>
+                            <input name="tagName" id="tagName" ref={editShopForm} type="text"
+                                   className="validate"/>
+                        </Field>
+                        <Button type="submit" label="Edit" name="action"/>
+                    </form>
                 </div>
-            : null}
-        </>
+                : null}
+        </BlockContent>
     );
-}
+};

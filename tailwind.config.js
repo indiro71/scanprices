@@ -8,4 +8,8 @@ module.exports = {
         extend: {},
     },
     plugins: [],
+    fontFamily: {
+        display: ['Roboto Mono', 'Menlo', 'monospace'],
+        body: ['Roboto Mono', 'Menlo', 'monospace'],
+    },
 }
