@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useHttp } from '../hooks/http.hook';
-import { LinearProgress, Snackbar } from '@material-ui/core';
+import { Snackbar } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import { BlockContent } from '../components/BlockContent';
 import { Button, Field } from '../components/form';
 
 export const DetailShopPage = () => {
-    const { loading, request } = useHttp();
+    const { request } = useHttp();
     const [shop, setShop] = useState([]);
     const shopId = useParams().id;
     const [status, setStatus] = useState('');

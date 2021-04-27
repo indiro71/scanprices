@@ -1,23 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react';
-import M from 'materialize-css/dist/js/materialize.min.js';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { LinearProgress, Snackbar } from '@material-ui/core';
 import { useHttp } from '../hooks/http.hook';
 import { AuthContext } from '../context/AuthContext';
+import { BlockContent } from '../components/BlockContent';
 
 export const AuthPage = () => {
     const auth = useContext(AuthContext);
-    const { loading, request } = useHttp();
-    const { register: login, handleSubmit: handleLogin, errors: errorsLogin } = useForm();
-    const { register: register, handleSubmit: handleRegister, errors: errorsRegister } = useForm();
+    const { request } = useHttp();
+    const { register: login, handleSubmit: handleLogin } = useForm();
+    const { register: register, handleSubmit: handleRegister } = useForm();
     const [ open, setOpen ] = useState(false);
     const [ status, setStatus ] = useState('');
-
-    useEffect(() => {
-        window.M.updateTextFields();
-        const tabs = document.querySelectorAll('.tabs');
-        M.Tabs.init(tabs, {})
-    }, []);
 
     const registerHandler = async (data) => {
         try {
@@ -39,16 +33,15 @@ export const AuthPage = () => {
     };
 
     return (
-        <>
-            <LinearProgress style={{ opacity: loading ? 1 : 0 }}/>
+        <BlockContent>
             <Snackbar
                 open={open}
                 message={status}
             />
 
-            <div className="masonry row">
-                <div className="col s12">
-                    <h2>Auth</h2>
+            <div className="">
+                <div className="">
+                    <div className="header-3">Auth</div>
 
                     <div className="row">
                         <div className="col s6">
@@ -108,6 +101,6 @@ export const AuthPage = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </BlockContent>
     );
 }

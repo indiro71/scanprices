@@ -44,7 +44,7 @@ export const MainPage = () => {
             <span><b>{product.currentPrice}</b> <FontAwesomeIcon icon={faRubleSign}/></span> : 'not available';
         return [
             <Link className="link" to={`/product/${product._id}`}>{product.name}</Link>,
-            <a className="link" target="_blank" href={product.url}>{product.shop.name}</a>,
+            <a className="link" target="_blank" rel="noreferrer" href={product.url}>{product.shop.name}</a>,
             price,
             moment(product.dateCreate).format('DD-MM-YYYY HH:mm')
         ]

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useHttp } from '../hooks/http.hook';
-import { LinearProgress } from '@material-ui/core';
 import { faRubleSign } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Line } from 'react-chartjs-2';
@@ -9,7 +8,7 @@ import moment from 'moment';
 import { BlockContent } from '../components/BlockContent';
 
 export const DetailProductPage = () => {
-    const { loading, request } = useHttp();
+    const { request } = useHttp();
     const [product, setProduct] = useState([]);
     const [diffPrice, setDiffPrice] = useState(0);
     const productId = useParams().id;
@@ -124,7 +123,7 @@ export const DetailProductPage = () => {
                             </div>
 
                             <div className="card-action">
-                                <a className="link uppercase px-3" target="_blank"
+                                <a className="link uppercase px-3" target="_blank" rel="noreferrer"
                                    href={product.params.url}>Go to shop {product.params.shop.name}</a>
                                 {/*<a href="#">Subscribe</a>*/}
                                 {/*<a href="#">Delete</a>*/}

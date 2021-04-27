@@ -7,7 +7,7 @@ import { Button, Field } from '../components/form';
 
 export const AddProductPage = () => {
     const { request } = useHttp();
-    const { register, handleSubmit, errors } = useForm();
+    const { register, handleSubmit } = useForm();
     const [status, setStatus] = useState('');
     const [open, setOpen] = useState(false);
 
