@@ -7,10 +7,6 @@ function LeftMenu() {
     const auth = useContext(AuthContext);
     const menu = [
         {
-            title: 'Main',
-            link: '/'
-        },
-        {
             title: 'Auth',
             link: 'Auth',
             auth: false
@@ -44,13 +40,19 @@ function LeftMenu() {
     }, [ auth.token ]);
 
     return (
-        <ul id="slide-out" className="sidenav sidenav-fixed">
-            {filterMenu.map(item => (
-                <li>
-                    <NavLink className={'bold waves-effect'} to={item.link}>{item.title}</NavLink>
-                </li>
+        <div className="w-full">
+            {filterMenu.map((item, index) => (
+                    <NavLink
+                        key={index}
+                        activeClassName="text-gray-900 bg-gray-200 pointer-events-none left-active"
+                        className="my-1 text-white px-4 py-3 w-full block rounded-l-full relative text-gray-100 hover:bg-blue-200 hover:bg-opacity-10"
+                        to={item.link}>
+                            <div className="left-active-top" />
+                                {item.title}
+                            <div className="left-active-bottom" />
+                    </NavLink>
             ))}
-        </ul>
+        </div>
     );
 }
 
