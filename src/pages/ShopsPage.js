@@ -1,51 +1,47 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { useHttp } from '../hooks/http.hook';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { LinearProgress } from '@material-ui/core';
+import { useHttp } from '../hooks/http.hook';
+import { BlockContent } from '../components/BlockContent';
 
 export const ShopsPage = () => {
-    const { loading, request } = useHttp();
-    const [ shops, setShops ] = useState([]);
+    const { request } = useHttp();
+    const [shops, setShops] = useState([]);
 
     const fetchShops = useCallback(async () => {
         try {
             const fetched = await request(`/scanprices/shops/all/`, 'GET');
             setShops(fetched.shops);
-        } catch (e) {}
+        } catch (e) {
+        }
     }, []);
 
-    const deleteShop = async ( deleteShopId) => {
-        const deleted = await request(`/scanprices/shops/delete/${deleteShopId}`, 'DELETE');
+    const deleteShop = async (deleteShopId) => {
+        await request(`/scanprices/shops/delete/${deleteShopId}`, 'DELETE');
         fetchShops();
-    }
+    };
 
-    useEffect( () => {
+    useEffect(() => {
         fetchShops();
     }, []);
 
     return (
-        <div className="masonry row">
-            <LinearProgress style={{ opacity: loading ? 1 : 0 }} />
-            <div className="col s12">
-                <h2>Shops</h2>
-            </div>
-
-            {shops.map(shop => {
-                return (
-                    <div className="col xl l4 m6 s12">
-                        <div className="card">
-                            <Link to={`/shop/${shop._id}`}>
-                                <div className="card-content">
-                                    <span className="card-title center-align activator grey-text text-darken-4">{shop.name}</span>
-                                </div>
+        <BlockContent>
+            <div className="header-2">Shops</div>
+            <div className="flex flex-wrap -mx-1.5">
+                {shops.map(shop => {
+                    return (
+                        <div
+                            className="flex w-1/6 rounded-2xl p-2 justify-center bg-gray-400 bg-opacity-60 flex-wrap mx-1.5">
+                            <Link className="link w-full text-center" to={`/shop/${shop._id}`}>
+                                <div className="header-3 hover:no-underline">{shop.name}</div>
                             </Link>
-                            <div className="card-action">
-                                <div  onClick={() => deleteShop(shop._id)}>Delete</div>
+                            <div className="border-t border-black pt-2 w-full text-center">
+                                <div className="link" onClick={() => deleteShop(shop._id)}>Delete</div>
                             </div>
                         </div>
-                    </div>
-                );
-            })}
-        </div>
+                    );
+                })}
+            </div>
+        </BlockContent>
     );
-}
+};
