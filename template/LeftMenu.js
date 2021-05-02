@@ -1,14 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import Link from 'next/link';
 import { AuthContext } from '../context/AuthContext';
+import { useRouter } from 'next/router'
 
 function LeftMenu() {
+    const router = useRouter()
     const [ filterMenu, setFilterMenu ] = useState([]);
     const auth = useContext(AuthContext);
     const menu = [
         {
             title: 'Auth',
-            link: 'Auth',
+            link: '/auth',
             auth: false
         },
         {
@@ -42,15 +44,15 @@ function LeftMenu() {
     return (
         <div className="w-full">
             {filterMenu.map((item, index) => (
-                    <NavLink
+                    <Link
                         key={index}
-                        activeClassName="text-gray-900 bg-gray-200 pointer-events-none left-active"
-                        className="my-1 text-white px-4 py-3 w-full block rounded-l-full relative text-gray-100 hover:bg-blue-200 hover:bg-opacity-10"
-                        to={item.link}>
-                            <div className="left-active-top" />
+                        href={item.link}>
+                            <div className={`${item.link === router.asPath && 'text-gray-900 bg-gray-200 pointer-events-none left-active'} my-1 text-white px-4 py-3 w-full block rounded-l-full relative text-gray-100 hover:bg-blue-200 hover:bg-opacity-10 cursor-pointer`}>
+                                <div className="left-active-top" />
                                 {item.title}
-                            <div className="left-active-bottom" />
-                    </NavLink>
+                                <div className="left-active-bottom" />
+                            </div>
+                    </Link>
             ))}
         </div>
     );

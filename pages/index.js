@@ -1,13 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Head from 'next/head'
+import { useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
-import { faRubleSign } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useHttp } from '../hooks/http.hook';
-import { Table } from '../components/Table';
+import Link from 'next/link';
 import { BlockContent } from '../components/BlockContent';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRubleSign } from '@fortawesome/free-solid-svg-icons';
+import { Table } from '../components/Table';
+import { useHttp } from '../hooks/http.hook';
 
-export const MainPage = () => {
+
+export default function Home() {
     const { request } = useHttp();
     const [ lastAddedProducts, setLastAddedProducts ] = useState([]);
     const [ lastUpdatedProducts, setLastUpdatedProducts ] = useState([]);
@@ -43,7 +45,7 @@ export const MainPage = () => {
         const price = +product.currentPrice !== 0 ?
             <span><b>{product.currentPrice}</b> <FontAwesomeIcon icon={faRubleSign}/></span> : 'not available';
         return [
-            <Link className="link" to={`/product/${product._id}`}>{product.name}</Link>,
+            <Link className="link" href={`/products/${product._id}`}>{product.name}</Link>,
             <a className="link" target="_blank" rel="noreferrer" href={product.url}>{product.shop.name}</a>,
             price,
             moment(product.dateCreate).format('DD-MM-YYYY HH:mm')
@@ -53,14 +55,18 @@ export const MainPage = () => {
     const tableUpdatedBody = lastUpdatedProducts.map(product => {
         const price = product.prices[1] ? product.prices[0]?.price - product.prices[1]?.price : product.prices[0]?.price;
         return [
-            <Link className="link" to={`/product/${product._id}`}>{product.name}</Link>,
+            <Link className="link" href={`/products/${product._id}`}>{product.name}</Link>,
             <span
                 className={moment().isSame(product.dateUpdate, 'day') ? 'text-xl' : ''}>{moment(product.dateUpdate).format('DD-MM-YYYY  HH:mm')}</span>,
             <span><b className={price > 0 ? 'text-red-500' : 'text-green-500'}>{price}</b> <FontAwesomeIcon icon={faRubleSign}/></span>
         ]
     });
 
-    return (
+  return (
+    <>
+      <Head>
+        <title>Main page - Scanprices</title>
+      </Head>
         <BlockContent>
             <div className="header-3">Last added products</div>
             <Table headings={headAddedTable} tableBody={tableAddedBody}/>
@@ -68,5 +74,9 @@ export const MainPage = () => {
             <div className="header-3">Last updated products</div>
             <Table headings={headUpdatedTable} tableBody={tableUpdatedBody}/>
         </BlockContent>
-    );
+
+
+
+    </>
+  )
 }
