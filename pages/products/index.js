@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useHttp } from '../hooks/http.hook';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRubleSign } from '@fortawesome/free-solid-svg-icons';
-import { Table } from '../components/Table';
-import { BlockContent } from '../components/BlockContent';
+import { useHttp } from '../../hooks/http.hook';
+import { BlockContent } from '../../components/BlockContent';
+import { Table } from '../../components/Table';
+import Head from 'next/head';
 
-export const ProductsPage = () => {
+export default function Products() {
     const { request } = useHttp();
     const [products, setProducts] = useState([]);
 
@@ -32,7 +33,7 @@ export const ProductsPage = () => {
         const price = +product.currentPrice !== 0 ?
             <span><b>{product.currentPrice}</b> <FontAwesomeIcon icon={faRubleSign}/></span> : 'not available';
         return [
-            <Link className="link" to={`/product/${product._id}`}>{product.name}</Link>,
+            <Link className="link" href={`/products/${product._id}`}>{product.name}</Link>,
             <a className="link" target="_blank" rel="noreferrer" href={product.url}>{product.shop.name}</a>,
             price,
             <div className="link" onClick={() => deleteProduct(product._id)}>delete</div>
@@ -40,9 +41,14 @@ export const ProductsPage = () => {
     });
 
     return (
-        <BlockContent>
-            <div className="header-2">Products</div>
-            <Table headings={headings} tableBody={tableBody}/>
-        </BlockContent>
+        <>
+            <Head>
+                <title>Products page - Scanprices</title>
+            </Head>
+            <BlockContent>
+                <div className="header-2">Products</div>
+                <Table headings={headings} tableBody={tableBody}/>
+            </BlockContent>
+        </>
     );
 };
