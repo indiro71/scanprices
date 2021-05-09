@@ -9,6 +9,10 @@ function LeftMenu() {
     const auth = useContext(AuthContext);
     const menu = [
         {
+            title: 'Main',
+            link: '/'
+        },
+        {
             title: 'Auth',
             link: '/auth',
             auth: false
