@@ -6,9 +6,10 @@ import { useHttp } from '../../hooks/http.hook';
 import { BlockContent } from '../../components/BlockContent';
 import { Table } from '../../components/Table';
 import Head from 'next/head';
+import { Loader } from '../../components/loader/Loader';
 
 export default function Products() {
-    const { request } = useHttp();
+    const { request, loading } = useHttp();
     const [products, setProducts] = useState([]);
 
     const fetchProducts = useCallback(async () => {
@@ -47,7 +48,7 @@ export default function Products() {
             </Head>
             <BlockContent>
                 <div className="header-2">Products</div>
-                <Table headings={headings} tableBody={tableBody}/>
+                {loading ? <Loader visible={loading}/> : <Table headings={headings} tableBody={tableBody}/>}
             </BlockContent>
         </>
     );

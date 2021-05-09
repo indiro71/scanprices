@@ -7,10 +7,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRubleSign } from '@fortawesome/free-solid-svg-icons';
 import { Table } from '../components/Table';
 import { useHttp } from '../hooks/http.hook';
+import { Loader } from '../components/loader/Loader';
 
 
 export default function Home() {
-    const { request } = useHttp();
+    const { request, loading } = useHttp();
     const [ lastAddedProducts, setLastAddedProducts ] = useState([]);
     const [ lastUpdatedProducts, setLastUpdatedProducts ] = useState([]);
 
@@ -69,14 +70,11 @@ export default function Home() {
       </Head>
         <BlockContent>
             <div className="header-3">Last added products</div>
-            <Table headings={headAddedTable} tableBody={tableAddedBody}/>
+            {loading ? <Loader visible={loading}/> : <Table headings={headAddedTable} tableBody={tableAddedBody}/>}
 
             <div className="header-3">Last updated products</div>
-            <Table headings={headUpdatedTable} tableBody={tableUpdatedBody}/>
+            {loading ? <Loader visible={loading}/> : <Table headings={headUpdatedTable} tableBody={tableUpdatedBody}/>}
         </BlockContent>
-
-
-
     </>
   )
 }
