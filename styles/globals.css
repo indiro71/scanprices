@@ -53,6 +53,33 @@ body {
   transition: opacity 300ms;
 }
 
+.main-loader {
+  background: linear-gradient(to right, #e5e7eb, #e5e7eb);
+  background-color: #1e40af;
+  background-size: 20%;
+  background-repeat: repeat-y;
+  background-position: -25% 0;
+  animation: scroll 1.2s ease-in-out infinite;
+  opacity: 0;
+  visibility: hidden;
+  transition-property: opacity, visibility;
+  transition-duration: 0.45s;
+}
+
+.main-loader.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@keyframes scroll {
+  50% {
+    background-size: 80%
+  }
+  100% {
+    background-position: 125% 0;
+  }
+}
+
 .link {
   @apply text-blue-600 opacity-80 hover:underline hover:opacity-100 transition cursor-pointer;
 }

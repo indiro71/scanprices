@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useHttp } from '../../hooks/http.hook';
 import { BlockContent } from '../../components/BlockContent';
-import Head from 'next/head';
+import { Loader } from '../../components/loader/Loader';
 
 export default function Shops() {
-    const { request } = useHttp();
+    const { request, loading } = useHttp();
     const [shops, setShops] = useState([]);
 
     const fetchShops = useCallback(async () => {
@@ -33,7 +34,8 @@ export default function Shops() {
             <BlockContent>
                 <div className="header-2">Shops</div>
                 <div className="flex flex-wrap -mx-1.5">
-                    {shops.map(shop => {
+                    {loading && <Loader visible={loading}/>}
+                    {!loading && shops.map(shop => {
                         return (
                             <div
                                 key={shop._id}

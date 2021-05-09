@@ -6,10 +6,11 @@ import { BlockContent } from '../../components/BlockContent';
 import Head from 'next/head';
 import { Line } from 'react-chartjs-2';
 import moment from 'moment';
+import { Loader } from '../../components/loader/Loader';
 
 
 const DetailProductPage = ({productId}) => {
-    const { request } = useHttp();
+    const { request, loading } = useHttp();
     const [product, setProduct] = useState([]);
     const [diffPrice, setDiffPrice] = useState(0);
 
@@ -78,7 +79,8 @@ const DetailProductPage = ({productId}) => {
                 <title>{product?.params?.name} - Scanprices</title>
             </Head>
             <BlockContent>
-                {product.params ?
+                {loading && <Loader visible={loading}/>}
+                {product.params && !loading ?
                     <div>
                         <div className="header-2">{product.params.name}</div>
 

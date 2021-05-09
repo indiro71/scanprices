@@ -14,7 +14,7 @@ const project = () => {
 }
 
 function MyApp({ Component, pageProps }) {
-    const { token, login, logout, ready } = useAuth();
+    const { token, login, logout } = useAuth();
     const isAuthenticated = !!token;
   return (
       <AuthContext.Provider value={{ token, login, logout, isAuthenticated }}>
