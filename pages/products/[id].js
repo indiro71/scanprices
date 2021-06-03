@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRubleSign } from '@fortawesome/free-solid-svg-icons';
 import { useHttp } from '../../hooks/http.hook';
@@ -27,14 +27,28 @@ const DetailProductPage = ({productId}) => {
         fetchProduct();
     }, [fetchProduct]);
 
+    const reversed = useMemo(() => {
+        const { prices } = product;
+        if (!prices) return undefined;
+        const allPrices = [];
+        const revPrices = [];
+        for (let i = prices.length; i !== 0; i--) {
+            if (prices[i]?.price && !allPrices.includes(prices[i]?.price)) {
+                allPrices.push(prices[i].price);
+                revPrices.push(prices[i]);
+            }
+        }
+        return revPrices.reverse();
+    }, [product]);
+
     const dataChart = {
-        labels: product.prices ? product.prices.map(price => moment(price.date).format('DD MM YYYY')) : '',
+        labels: reversed ? reversed.map(price => moment(price.date).format('DD MM YYYY')) : '',
         datasets: [
             {
                 label: 'Product price',
                 backgroundColor: '#ffffff',
                 borderColor: '#000000',
-                data: product.prices ? product.prices.map(price => price.price) : '',
+                data: reversed ? reversed.map(price => price.price) : '',
                 fill: false,
             }
         ]
