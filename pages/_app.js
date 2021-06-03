@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/auth.hook';
 import LeftMenu from '../template/LeftMenu';
 import { LayoutComponent } from '@indiro/layout';
 import '@indiro/layout/dist/index.css';
+import '@indiro/library/dist/index.css';
 
 
 const project = () => {

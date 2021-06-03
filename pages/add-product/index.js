@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import { Button } from '@indiro/library';
 import Head from 'next/head';
 import { useForm } from 'react-hook-form';
 import { useHttp } from '../../hooks/http.hook';
 import { BlockContent } from '../../components/BlockContent';
-import { Button, Field } from '../../components/form';
+import { Field } from '../../components/form';
 import { Snackbar } from '@material-ui/core';
 import { Loader } from '../../components/loader/Loader';
 
