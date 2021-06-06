@@ -3,11 +3,10 @@ import { useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
 import Link from 'next/link';
 import { BlockContent } from '../components/BlockContent';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRubleSign } from '@fortawesome/free-solid-svg-icons';
 import { Table } from '../components/Table';
 import { useHttp } from '../hooks/http.hook';
 import { Loader } from '../components/loader/Loader';
+import { convertPrice } from '../helpers';
 
 
 export default function Home() {
@@ -44,7 +43,7 @@ export default function Home() {
 
     const tableAddedBody = lastAddedProducts.map(product => {
         const price = +product.currentPrice !== 0 ?
-            <span><b>{product.currentPrice}</b> <FontAwesomeIcon icon={faRubleSign}/></span> : 'not available';
+            <span><b>{convertPrice(product.currentPrice)}</b> </span> : 'not available';
         return [
             <Link className="link" href={`/products/${product._id}`}>{product.name}</Link>,
             <a className="link" target="_blank" rel="noreferrer" href={product.url}>{product.shop.name}</a>,
@@ -59,7 +58,7 @@ export default function Home() {
             <Link className="link" href={`/products/${product._id}`}>{product.name}</Link>,
             <span
                 className={moment().isSame(product.dateUpdate, 'day') ? 'text-xl' : ''}>{moment(product.dateUpdate).format('DD-MM-YYYY  HH:mm')}</span>,
-            <span><b className={price > 0 ? 'text-red-500' : 'text-green-500'}>{price}</b> <FontAwesomeIcon icon={faRubleSign}/></span>
+            <span><b className={price > 0 ? 'text-red-500' : 'text-green-500'}>{convertPrice(price)}</b></span>
         ]
     });
 
