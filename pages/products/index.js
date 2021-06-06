@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRubleSign } from '@fortawesome/free-solid-svg-icons';
 import { useHttp } from '../../hooks/http.hook';
 import { BlockContent } from '../../components/BlockContent';
 import { Table } from '../../components/Table';
 import Head from 'next/head';
 import { Loader } from '../../components/loader/Loader';
+import { convertPrice } from '../../helpers';
 
 export default function Products() {
     const { request, loading } = useHttp();
@@ -32,7 +31,7 @@ export default function Products() {
     const headings = ['Name', 'Shop', 'Current price', 'Delete'];
     const tableBody = products.map(product => {
         const price = +product.currentPrice !== 0 ?
-            <span><b>{product.currentPrice}</b> <FontAwesomeIcon icon={faRubleSign}/></span> : 'not available';
+            <span><b>{convertPrice(product.currentPrice)}</b></span> : 'not available';
         return [
             <Link className="link" href={`/products/${product._id}`}>{product.name}</Link>,
             <a className="link" target="_blank" rel="noreferrer" href={product.url}>{product.shop.name}</a>,
