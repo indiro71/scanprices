@@ -32,6 +32,8 @@ export default function AuhPage() {
             auth.login(fetched.token);
             setOpen(true);
         } catch (e) {
+            setStatus(e.message);
+            setOpen(true);
         }
     };
 

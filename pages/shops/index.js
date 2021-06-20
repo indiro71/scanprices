@@ -11,14 +11,14 @@ export default function Shops() {
 
     const fetchShops = useCallback(async () => {
         try {
-            const fetched = await request(`/scanprices/shops/all/`, 'GET');
-            setShops(fetched.shops);
+            const shops = await request(`/scanprices/shops/`, 'GET');
+            setShops(shops);
         } catch (e) {
         }
     }, []);
 
     const deleteShop = async (deleteShopId) => {
-        await request(`/scanprices/shops/delete/${deleteShopId}`, 'DELETE');
+        await request(`/scanprices/shops/${deleteShopId}`, 'DELETE');
         fetchShops();
     };
 

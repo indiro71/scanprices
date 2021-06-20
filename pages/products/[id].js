@@ -20,9 +20,9 @@ const DetailProductPage = ({ productId }) => {
 
         const fetchProduct = useCallback(async () => {
             try {
-                const fetched = await request(`/scanprices/products/item/${productId}`, 'GET');
-                setProduct(fetched.data);
-                setDiffPrice(fetched.data.prices[fetched.data.prices.length - 2].price);
+                const product = await request(`/scanprices/products/${productId}`, 'GET');
+                setProduct(product);
+                setDiffPrice(product.prices[product.prices.length - 2].price);
             } catch (e) {
             }
         }, []);
