@@ -20,7 +20,7 @@ export default function Products() {
     }, []);
 
     const deleteProduct = async (deleteProductId) => {
-        await request(`/scanprices/products/delete/${deleteProductId}`, 'DELETE');
+        await request(`/scanprices/products/${deleteProductId}`, 'DELETE');
         fetchProducts();
     };
 
