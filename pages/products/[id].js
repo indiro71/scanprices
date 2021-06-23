@@ -31,10 +31,10 @@ const DetailProductPage = ({ productId }) => {
             if (!inputRef.current?.value) return;
 
             try {
-                const fetched = await request(`/scanprices/products/subscribe/`, 'POST',
+                const fetched = await request(`/scanprices/subscribe/`, 'POST',
                     {
-                        productId,
-                        price: inputRef.current?.value
+                        price: inputRef.current?.value,
+                        productId
                     });
                 setEditAlertPrice(false);
                 setProduct({ ...product, subscribe: fetched.data });
@@ -44,7 +44,7 @@ const DetailProductPage = ({ productId }) => {
 
         const fetchUnSubscribe = useCallback(async () => {
             try {
-                const fetched = await request(`/scanprices/products/unsubscribe/`, 'POST',
+                const fetched = await request(`/scanprices/unsubscribe/`, 'POST',
                     {
                         productId
                     });
