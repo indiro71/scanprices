@@ -21,8 +21,15 @@ export default function AddProduct() {
     const addProduct = async (data) => {
         if (productData) {
             try {
-                const fetched = await request(`/scanprices/products/add/`, 'POST', { product: productData, alertPrice: data.alertPrice });
-                router.push(`/products/${fetched._id}`);
+                const product = await request(`/scanprices/products/add/`, 'POST', { product: productData });
+                if (data?.alertPrice) {
+                    await request(`/scanprices/subscribe/`, 'POST',
+                        {
+                            price: data?.alertPrice,
+                            good: product._id
+                        });
+                }
+                router.push(`/products/${product._id}`);
             } catch (e) {
                 setStatus(e.message);
                 setOpen(true);

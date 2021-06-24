@@ -22,6 +22,12 @@ const DetailProductPage = ({ productId }) => {
             try {
                 const product = await request(`/scanprices/products/${productId}`, 'GET');
                 setProduct(product);
+                if (auth.token) {
+                    const subscribe = await request(`/scanprices/subscribe/${productId}`, 'GET');
+                    if (subscribe) {
+                        setProduct({ ...product, subscribe });
+                    }
+                }
                 setDiffPrice(product.prices[product.prices.length - 2].price);
             } catch (e) {
             }
@@ -31,20 +37,20 @@ const DetailProductPage = ({ productId }) => {
             if (!inputRef.current?.value) return;
 
             try {
-                const fetched = await request(`/scanprices/subscribe/`, 'POST',
+                const subscribe = await request(`/scanprices/subscribe/`, 'POST',
                     {
                         price: inputRef.current?.value,
-                        productId
+                        good: productId
                     });
                 setEditAlertPrice(false);
-                setProduct({ ...product, subscribe: fetched.data });
+                setProduct({ ...product, subscribe });
             } catch (e) {
             }
         }, [product]);
 
         const fetchUnSubscribe = useCallback(async () => {
             try {
-                const fetched = await request(`/scanprices/unsubscribe/`, 'POST',
+                const fetched = await request(`/scanprices/subscribe/unsubscribe/`, 'POST',
                     {
                         productId
                     });
