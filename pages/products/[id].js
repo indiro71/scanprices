@@ -50,10 +50,7 @@ const DetailProductPage = ({ productId }) => {
 
         const fetchUnSubscribe = useCallback(async () => {
             try {
-                const fetched = await request(`/scanprices/subscribe/unsubscribe/`, 'POST',
-                    {
-                        productId
-                    });
+                await request(`/scanprices/subscribe/${productId}`, 'DELETE');
                 setEditAlertPrice(false);
                 setProduct({ ...product, subscribe: undefined });
             } catch (e) {

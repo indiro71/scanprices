@@ -21,7 +21,7 @@ export default function AddProduct() {
     const addProduct = async (data) => {
         if (productData) {
             try {
-                const product = await request(`/scanprices/products/add/`, 'POST', { product: productData });
+                const product = await request(`/scanprices/products/add/`, 'POST', productData);
                 if (data?.alertPrice) {
                     await request(`/scanprices/subscribe/`, 'POST',
                         {
