@@ -20,9 +20,15 @@ const DetailProductPage = ({ productId }) => {
 
         const fetchProduct = useCallback(async () => {
             try {
-                const fetched = await request(`/scanprices/products/item/${productId}`, 'GET');
-                setProduct(fetched.data);
-                setDiffPrice(fetched.data.prices[fetched.data.prices.length - 2].price);
+                const product = await request(`/scanprices/products/${productId}`, 'GET');
+                setProduct(product);
+                if (auth.token) {
+                    const subscribe = await request(`/scanprices/subscribe/${productId}`, 'GET');
+                    if (subscribe) {
+                        setProduct({ ...product, subscribe });
+                    }
+                }
+                setDiffPrice(product.prices[product.prices.length - 2].price);
             } catch (e) {
             }
         }, []);
@@ -31,23 +37,20 @@ const DetailProductPage = ({ productId }) => {
             if (!inputRef.current?.value) return;
 
             try {
-                const fetched = await request(`/scanprices/products/subscribe/`, 'POST',
+                const subscribe = await request(`/scanprices/subscribe/`, 'POST',
                     {
-                        productId,
-                        price: inputRef.current?.value
+                        price: inputRef.current?.value,
+                        good: productId
                     });
                 setEditAlertPrice(false);
-                setProduct({ ...product, subscribe: fetched.data });
+                setProduct({ ...product, subscribe });
             } catch (e) {
             }
         }, [product]);
 
         const fetchUnSubscribe = useCallback(async () => {
             try {
-                const fetched = await request(`/scanprices/products/unsubscribe/`, 'POST',
-                    {
-                        productId
-                    });
+                await request(`/scanprices/subscribe/${productId}`, 'DELETE');
                 setEditAlertPrice(false);
                 setProduct({ ...product, subscribe: undefined });
             } catch (e) {

@@ -16,8 +16,8 @@ export default function Home() {
 
     const fetchLastAddedProducts = useCallback(async () => {
         try {
-            const fetched = await request(`/scanprices/products/lastadded/`, 'GET');
-            setLastAddedProducts(fetched.products);
+            const products = await request(`/scanprices/products/lastadded/`, 'GET');
+            setLastAddedProducts(products);
         } catch (e) {
         }
     }, []);

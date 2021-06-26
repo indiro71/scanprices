@@ -29,9 +29,11 @@ export default function AuhPage() {
         try {
             const fetched = await request('/auth/login/', 'POST', { ...data });
             setStatus(fetched.message);
-            auth.login(fetched.token);
+            auth.login(`Bearer ${fetched.token}`);
             setOpen(true);
         } catch (e) {
+            setStatus(e.message);
+            setOpen(true);
         }
     };
 
