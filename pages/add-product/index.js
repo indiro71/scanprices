@@ -21,8 +21,15 @@ export default function AddProduct() {
     const addProduct = async (data) => {
         if (productData) {
             try {
-                const fetched = await request(`/scanprices/products/add/`, 'POST', { product: productData, alertPrice: data.alertPrice });
-                router.push(`/products/${fetched.id}`);
+                const product = await request(`/scanprices/products/add/`, 'POST', productData);
+                if (data?.alertPrice) {
+                    await request(`/scanprices/subscribe/`, 'POST',
+                        {
+                            price: data?.alertPrice,
+                            product: product._id
+                        });
+                }
+                router.push(`/products/${product._id}`);
             } catch (e) {
                 setStatus(e.message);
                 setOpen(true);
@@ -33,8 +40,8 @@ export default function AddProduct() {
     const scanProduct = async (data) => {
         if (data.url) {
             try {
-                const fetched = await request(`/scanprices/products/scan/`, 'POST', data);
-                setProductData(fetched.data);
+                const productData = await request(`/scanprices/products/scan/`, 'POST', data);
+                setProductData(productData);
             } catch (e) {
                 setStatus(e.message);
                 setOpen(true);

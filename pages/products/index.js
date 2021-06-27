@@ -13,14 +13,14 @@ export default function Products() {
 
     const fetchProducts = useCallback(async () => {
         try {
-            const fetched = await request(`/scanprices/products/all/`, 'GET');
-            setProducts(fetched.products);
+            const products = await request(`/scanprices/products/`, 'GET');
+            setProducts(products);
         } catch (e) {
         }
     }, []);
 
     const deleteProduct = async (deleteProductId) => {
-        await request(`/scanprices/products/delete/${deleteProductId}`, 'DELETE');
+        await request(`/scanprices/products/${deleteProductId}`, 'DELETE');
         fetchProducts();
     };
 

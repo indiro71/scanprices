@@ -15,13 +15,13 @@ const DetailShopPage = ({shopId}) => {
 
     const fetchShop = useCallback(async () => {
         try {
-            const fetched = await request(`/scanprices/shops/item/${shopId}`, 'GET');
-            setShop(fetched.data);
-            setValue('name', fetched.data.params.name);
-            setValue('url', fetched.data.params.url);
-            setValue('tagPrices', fetched.data.params.tagPrices.join(', '));
-            setValue('tagImage', fetched.data.params.tagImage);
-            setValue('tagName', fetched.data.params.tagName);
+            const shop = await request(`/scanprices/shops/${shopId}`, 'GET');
+            setShop(shop);
+            setValue('name', shop.name);
+            setValue('url', shop.url);
+            setValue('tagPrices', shop.tagPrices.join(', '));
+            setValue('tagImage', shop.tagImage);
+            setValue('tagName', shop.tagName);
         } catch (e) {
         }
     }, [shopId, request]);
@@ -29,10 +29,10 @@ const DetailShopPage = ({shopId}) => {
     const editShop = async (data) => {
         if (data.name) {
             try {
-                const fetched = await request(`/scanprices/shops/edit/${shopId}`, 'PUT', data);
-                setStatus(fetched.message);
+                const fetched = await request(`/scanprices/shops/${shopId}`, 'PUT', data);
+                setStatus('Shop updated');
             } catch (e) {
-                setStatus(e.message);
+                console.log(e);
             }
             setOpen(true);
         }
@@ -45,16 +45,16 @@ const DetailShopPage = ({shopId}) => {
     return (
         <>
             <Head>
-                <title>Shop {shop?.params?.name} - Scanprices</title>
+                <title>Shop {shop?.name} - Scanprices</title>
             </Head>
             <BlockContent>
                 <Snackbar
                     open={open}
                     message={status}
                 />
-                {shop.params ?
+                {shop ?
                     <div>
-                        <div className="header-2">{shop.params.name}</div>
+                        <div className="header-2">{shop.name}</div>
 
                         <form className="form" onSubmit={handleSubmit(editShop)} noValidate
                               autoComplete="off">
