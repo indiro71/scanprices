@@ -26,7 +26,7 @@ export default function AddProduct() {
                     await request(`/scanprices/subscribe/`, 'POST',
                         {
                             price: data?.alertPrice,
-                            good: product._id
+                            product: product._id
                         });
                 }
                 router.push(`/products/${product._id}`);

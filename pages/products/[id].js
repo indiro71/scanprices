@@ -40,7 +40,7 @@ const DetailProductPage = ({ productId }) => {
                 const subscribe = await request(`/scanprices/subscribe/`, 'POST',
                     {
                         price: inputRef.current?.value,
-                        good: productId
+                        product: productId
                     });
                 setEditAlertPrice(false);
                 setProduct({ ...product, subscribe });
