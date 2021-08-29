@@ -13,5 +13,5 @@ export interface IProduct {
   dateCreate: Date;
   dateUpdate: Date;
   prices?: IPrice[];
-  shop: IShop
+  shop: IShop;
 }

@@ -12,7 +12,7 @@ const options = {
   responsive: true,
   title: {
     display: true,
-    text: 'Changes in product prices'
+    text: 'Changes in product prices',
   },
   tooltips: {
     mode: 'index',
@@ -20,41 +20,45 @@ const options = {
   },
   hover: {
     mode: 'nearest',
-    intersect: true
+    intersect: true,
   },
   scales: {
-    xAxes: [{
-      display: true,
-      scaleLabel: {
+    xAxes: [
+      {
         display: true,
-        labelString: 'Date'
-      }
-    }],
-    yAxes: [{
-      display: true,
-      scaleLabel: {
+        scaleLabel: {
+          display: true,
+          labelString: 'Date',
+        },
+      },
+    ],
+    yAxes: [
+      {
         display: true,
-        labelString: 'Price'
-      }
-    }]
-  }
+        scaleLabel: {
+          display: true,
+          labelString: 'Price',
+        },
+      },
+    ],
+  },
 };
 
-export const Chart: FC<ChartProps> = ({prices}) => {
+export const Chart: FC<ChartProps> = ({ prices }) => {
   const dataChart = {
-    labels: prices ? prices.map(price => moment(price.date).format('DD MM YYYY')) : '',
+    labels: prices
+      ? prices.map((price) => moment(price.date).format('DD MM YYYY'))
+      : '',
     datasets: [
       {
         label: 'Product price',
         backgroundColor: '#ffffff',
         borderColor: '#000000',
-        data: prices ? prices.map(price => price.price) : '',
+        data: prices ? prices.map((price) => price.price) : '',
         fill: false,
-      }
-    ]
+      },
+    ],
   };
 
-  return (
-    <Line data={dataChart} options={options} height={400} type="line"/>
-  );
+  return <Line data={dataChart} options={options} height={400} type="line" />;
 };
