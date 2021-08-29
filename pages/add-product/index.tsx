@@ -9,19 +9,20 @@ import { Field } from '../../components/form';
 import { Snackbar } from '@material-ui/core';
 import { Loader } from '../../components/loader/Loader';
 import currencyFormatter from 'currency-formatter';
+import { IProduct } from '../../types/product';
 
 export default function AddProduct() {
     const { request, loading } = useHttp();
     const { register, handleSubmit } = useForm();
-    const [status, setStatus] = useState('');
-    const [productData, setProductData] = useState();
-    const [open, setOpen] = useState(false);
+    const [status, setStatus] = useState<string>('');
+    const [productData, setProductData] = useState<IProduct>();
+    const [open, setOpen] = useState<boolean>(false);
     const router = useRouter()
 
     const addProduct = async (data) => {
         if (productData) {
             try {
-                const product = await request(`/scanprices/products/add/`, 'POST', productData);
+                const product: IProduct = await request(`/scanprices/products/add/`, 'POST', productData);
                 if (data?.alertPrice) {
                     await request(`/scanprices/subscribe/`, 'POST',
                         {
