@@ -16,7 +16,7 @@ export default function AddShop() {
     const addShop = async (data) => {
         if (data.url) {
             try {
-                const fetched = await request(`/scanprices/shops/`, 'POST', data);
+                await request(`/scanprices/shops/`, 'POST', data);
                 setStatus('Shop added');
             } catch (e) {
                 console.log(e);

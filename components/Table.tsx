@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-export const Table = ({ headings, tableBody }) => {
+interface TableProps {
+  headings: React.ReactNode[];
+  tableBody: React.ReactNode[][]
+}
+
+export const Table: FC<TableProps> = ({ headings, tableBody }) => {
     return (
         <table className="min-w-full divide-y divide-gray-200 my-2">
             <thead className="bg-gray-50">
@@ -15,7 +20,7 @@ export const Table = ({ headings, tableBody }) => {
             </thead>
 
             <tbody className="bg-white divide-y divide-gray-200">
-            {tableBody.map((tableRow, index) => {
+            {tableBody && tableBody.map((tableRow, index) => {
                 return (
                     <tr key={index}>
                         {tableRow.map((rowItem, index) =>
