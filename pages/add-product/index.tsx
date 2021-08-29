@@ -41,7 +41,7 @@ export default function AddProduct() {
     const scanProduct = async (data) => {
         if (data.url) {
             try {
-                const productData = await request(`/scanprices/products/scan/`, 'POST', data);
+                const productData = await request<IProduct>(`/scanprices/products/scan/`, 'POST', data);
                 setProductData(productData);
             } catch (e) {
                 setStatus(e.message);
