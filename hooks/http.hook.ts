@@ -20,7 +20,8 @@ export const useHttp = () => {
     body = null,
     headers: {
       [key: string]: string;
-    } = {}): Promise<T> {
+    } = {},
+  ): Promise<T> {
     setLoading(true);
     try {
       if (body) {
@@ -29,11 +30,13 @@ export const useHttp = () => {
       }
 
       if (userData?.token) {
-        headers['Authorization'] = userData.token;
+        headers.Authorization = userData.token;
       }
 
       const response = await fetch(apiServer + url, {
-        method, body, headers
+        method,
+        body,
+        headers,
       });
       const data = await response.json();
 
@@ -53,5 +56,10 @@ export const useHttp = () => {
 
   const clearError = useCallback(() => setError(null), []);
 
-  return {loading, request, error, clearError};
+  return {
+    loading,
+    request,
+    error,
+    clearError,
+  };
 };

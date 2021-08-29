@@ -9,19 +9,24 @@ import { convertPrice } from '../../helpers';
 import { IProduct } from '../../types/product';
 
 export default function Products(): JSX.Element {
-  const {request, loading} = useHttp();
+  const { request, loading } = useHttp();
   const [products, setProducts] = useState([]);
 
   const fetchProducts = useCallback(async () => {
     try {
-      const products = await request<IProduct[]>(`/scanprices/products/`, 'GET');
+      const products = await request<IProduct[]>(
+        `/scanprices/products/`,
+        'GET',
+      );
       setProducts(products);
-    } catch (e) {
-    }
+    } catch (e) {}
   }, []);
 
   const deleteProduct = async (deleteProductId) => {
-    await request<IProduct>(`/scanprices/products/${deleteProductId}`, 'DELETE');
+    await request<IProduct>(
+      `/scanprices/products/${deleteProductId}`,
+      'DELETE',
+    );
     fetchProducts();
   };
 
@@ -30,16 +35,30 @@ export default function Products(): JSX.Element {
   }, []);
 
   const tableHeads = ['Name', 'Shop', 'Current price', 'Delete'];
-  const tableBody = products && products.map(product => {
-    const price = +product.currentPrice !== 0 ?
-      <span><b>{convertPrice(product.currentPrice)}</b></span> : 'not available';
-    return [
-      <Link href={`/products/${product._id}`}><a className="link">{product.name}</a></Link>,
-      <a className="link" target="_blank" rel="noreferrer" href={product.url}>{product.shop.name}</a>,
-      price,
-      <div className="link" onClick={() => deleteProduct(product._id)}>delete</div>
-    ];
-  });
+  const tableBody =
+    products &&
+    products.map((product) => {
+      const price =
+        +product.currentPrice !== 0 ? (
+          <span>
+            <b>{convertPrice(product.currentPrice)}</b>
+          </span>
+        ) : (
+          'not available'
+        );
+      return [
+        <Link href={`/products/${product._id}`}>
+          <a className="link">{product.name}</a>
+        </Link>,
+        <a className="link" target="_blank" rel="noreferrer" href={product.url}>
+          {product.shop.name}
+        </a>,
+        price,
+        <div className="link" onClick={() => deleteProduct(product._id)}>
+          delete
+        </div>,
+      ];
+    });
 
   return (
     <>
@@ -48,8 +67,12 @@ export default function Products(): JSX.Element {
       </Head>
       <BlockContent>
         <div className="header-2">Products</div>
-        {loading ? <Loader visible={loading}/> : <Table headings={tableHeads} tableBody={tableBody}/>}
+        {loading ? (
+          <Loader visible={loading} />
+        ) : (
+          <Table headings={tableHeads} tableBody={tableBody} />
+        )}
       </BlockContent>
     </>
   );
-};
+}
