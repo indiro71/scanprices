@@ -15,11 +15,11 @@ const project = () => {
   );
 };
 
-function MyApp({Component, pageProps}): JSX.Element {
-  const {token, login, logout} = useAuth();
+function MyApp({ Component, pageProps }): JSX.Element {
+  const { token, login, logout } = useAuth();
   const isAuthenticated = !!token;
   return (
-    <AuthContext.Provider value={{token, login, logout, isAuthenticated}}>
+    <AuthContext.Provider value={{ token, login, logout, isAuthenticated }}>
       <LayoutComponent leftMenuItems={LeftMenu} project={project}>
         <Component {...pageProps} />
       </LayoutComponent>

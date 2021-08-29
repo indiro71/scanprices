@@ -9,8 +9,8 @@ export default function Home(): JSX.Element {
         <title>Main page - Scanprices</title>
       </Head>
       <BlockContent>
-        <LastAddedProducts/>
-        <LastUpdatedProducts/>
+        <LastAddedProducts />
+        <LastUpdatedProducts />
       </BlockContent>
     </>
   );

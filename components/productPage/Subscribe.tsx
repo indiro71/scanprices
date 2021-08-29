@@ -1,4 +1,11 @@
-import React, { FC, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Field } from '../form';
 import { useHttp } from '../../hooks/http.hook';
 import { convertPrice } from '../../helpers';
@@ -6,11 +13,11 @@ import { ISubscribe } from '../../types/subscribe';
 import { Loader } from '../loader/Loader';
 
 interface SubscribeProps {
-  productId: string
+  productId: string;
 }
 
-export const Subscribe: FC<SubscribeProps> = ({productId}) => {
-  const {request, loading} = useHttp();
+export const Subscribe: FC<SubscribeProps> = ({ productId }) => {
+  const { request, loading } = useHttp();
   const [editAlertPrice, setEditAlertPrice] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>();
   const [sub, setSub] = useState<ISubscribe>();
@@ -18,10 +25,12 @@ export const Subscribe: FC<SubscribeProps> = ({productId}) => {
   const fetchSubscribe = useCallback(async () => {
     if (!productId) return;
     try {
-      const subscribe = await request<ISubscribe>(`/scanprices/subscribe/${productId}`, 'GET');
+      const subscribe = await request<ISubscribe>(
+        `/scanprices/subscribe/${productId}`,
+        'GET',
+      );
       setSub(subscribe);
-    } catch (e) {
-    }
+    } catch (e) {}
   }, [productId]);
 
   useEffect(() => {
@@ -33,27 +42,28 @@ export const Subscribe: FC<SubscribeProps> = ({productId}) => {
       await request(`/scanprices/subscribe/${productId}`, 'DELETE');
       setEditAlertPrice(false);
       setSub(null);
-    } catch (e) {
-    }
+    } catch (e) {}
   }, [productId]);
 
   const editSubscribe = useCallback(async () => {
     if (!inputRef.current?.value) return;
 
     try {
-      const subscribe = await request<ISubscribe>(`/scanprices/subscribe/`, 'POST',
+      const subscribe = await request<ISubscribe>(
+        `/scanprices/subscribe/`,
+        'POST',
         {
           price: inputRef.current?.value,
-          product: productId
-        });
+          product: productId,
+        },
+      );
       setEditAlertPrice(false);
       setSub(subscribe);
-    } catch (e) {
-    }
+    } catch (e) {}
   }, [productId]);
 
   useEffect(() => {
-    const onKeypress = e => {
+    const onKeypress = (e) => {
       if (e.code === 'Enter' && inputRef.current?.value) {
         editSubscribe();
       }
@@ -66,45 +76,88 @@ export const Subscribe: FC<SubscribeProps> = ({productId}) => {
   }, [productId]);
 
   if (loading) {
-    return <Loader visible={loading}/>;
+    return <Loader visible={loading} />;
   }
 
   return (
     <div>
-      {sub ?
+      {sub ? (
         <div className="flex items-center">
           <p className="mr-3">Alert price: </p>
-          {!editAlertPrice && <p className="cursor-pointer"
-                                 onClick={() => setEditAlertPrice(true)}>{convertPrice(sub.price)}</p>}
-          {editAlertPrice && <div className="flex items-center">
+          {!editAlertPrice && (
+            <p
+              className="cursor-pointer"
+              onClick={() => setEditAlertPrice(true)}
+            >
+              {convertPrice(sub.price)}
+            </p>
+          )}
+          {editAlertPrice && (
+            <div className="flex items-center">
               <Field>
-                  <input autoFocus ref={inputRef} name="alertPrice"
-                         id="alertPrice" defaultValue={sub.price}
-                         type="text"/>
+                <input
+                  autoFocus
+                  ref={inputRef}
+                  name="alertPrice"
+                  id="alertPrice"
+                  defaultValue={sub.price}
+                  type="text"
+                />
               </Field>
-              <p onClick={() => setEditAlertPrice(false)}
-                 className="text-blue-600 cursor-pointer ml-3 hover:underline">Cancel</p>
-          </div>}
-          {!editAlertPrice && <p onClick={() => fetchUnSubscribe()}
-                                 className="ml-3 text-blue-600 cursor-pointer underline text-sm hover:underline">Unsubscribe</p>}
+              <p
+                onClick={() => setEditAlertPrice(false)}
+                className="text-blue-600 cursor-pointer ml-3 hover:underline"
+              >
+                Cancel
+              </p>
+            </div>
+          )}
+          {!editAlertPrice && (
+            <p
+              onClick={() => fetchUnSubscribe()}
+              className="ml-3 text-blue-600 cursor-pointer underline text-sm hover:underline"
+            >
+              Unsubscribe
+            </p>
+          )}
         </div>
-        :
+      ) : (
         <div>
-          {!editAlertPrice && <p onClick={() => setEditAlertPrice(true)}
-                                 className="text-blue-600 cursor-pointer">Subscribe
-              on alert min
-              price</p>}
-          {editAlertPrice && <div className="flex items-center">
+          {!editAlertPrice && (
+            <p
+              onClick={() => setEditAlertPrice(true)}
+              className="text-blue-600 cursor-pointer"
+            >
+              Subscribe on alert min price
+            </p>
+          )}
+          {editAlertPrice && (
+            <div className="flex items-center">
               <Field>
-                  <input autoFocus ref={inputRef} name="alertPrice"
-                         id="alertPrice" type="text"/>
+                <input
+                  autoFocus
+                  ref={inputRef}
+                  name="alertPrice"
+                  id="alertPrice"
+                  type="text"
+                />
               </Field>
-              <p onClick={() => editSubscribe()}
-                 className="text-blue-600 cursor-pointer ml-3 hover:underline">Save</p>
-              <p onClick={() => setEditAlertPrice(false)}
-                 className="text-blue-600 cursor-pointer ml-3 hover:underline">Cancel</p>
-          </div>}
-        </div>}
+              <p
+                onClick={() => editSubscribe()}
+                className="text-blue-600 cursor-pointer ml-3 hover:underline"
+              >
+                Save
+              </p>
+              <p
+                onClick={() => setEditAlertPrice(false)}
+                className="text-blue-600 cursor-pointer ml-3 hover:underline"
+              >
+                Cancel
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
