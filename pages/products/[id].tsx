@@ -10,34 +10,31 @@ import { IPrice } from '../../types/price';
 import { Chart, Subscribe } from '../../components/productPage';
 
 interface ProductData {
-  params: IProduct;
+  product: IProduct;
   prices: IPrice[];
-  subscribe?: {
-    price: number
-  };
 }
 
 const DetailProductPage = ({productId}) => {
     const {request, loading} = useHttp();
-    const [product, setProduct] = useState<ProductData>();
+    const [data, setData] = useState<ProductData>();
     const [diffPrice, setDiffPrice] = useState<number>(0);
 
-    const fetchProduct = useCallback(async () => {
+    const fetchData = useCallback(async () => {
       try {
-        const product = await request<ProductData>(`/scanprices/products/${productId}`, 'GET');
-        setProduct(product);
-        setDiffPrice(product.prices[product.prices.length - 2].price);
+        const data = await request<ProductData>(`/scanprices/products/${productId}`, 'GET');
+        setData(data);
+        setDiffPrice(data.prices[data.prices.length - 2].price);
       } catch (e) {
       }
     }, []);
 
     useEffect(() => {
-      fetchProduct();
+      fetchData();
     }, []);
 
     const reversedPrices = useMemo(() => {
-      if (!product) return;
-      const {prices} = product;
+      if (!data) return;
+      const {prices} = data;
       if (!prices) return;
       const allPrices = [];
       const revPrices = [];
@@ -48,60 +45,59 @@ const DetailProductPage = ({productId}) => {
         }
       }
       return revPrices.reverse();
-    }, [product]);
-
+    }, [data]);
 
     return (
       <>
         <Head>
-          <title>{product?.params?.name} - Scanprices</title>
+          <title>{data?.product?.name} - Scanprices</title>
         </Head>
         <BlockContent>
           {loading && <Loader visible={loading}/>}
-          {product?.params && !loading ?
+          {data?.product && !loading ?
             <div>
-              <div className="header-2">{product.params.name}</div>
+              <div className="header-2">{data.product.name}</div>
 
               <div className="flex w-full ">
                 <div className="w-1/4 mx-5 p-4 shadow-lg rounded-2xl bg-white">
-                  <img className="max-w-full" alt={product.params.name}
-                       src={`${process.env.NEXT_PUBLIC_REACT_APP_STORAGE_SERVER}/images/${product.params.image}`}/>
+                  <img className="max-w-full" alt={data.product.name}
+                       src={`${process.env.NEXT_PUBLIC_REACT_APP_STORAGE_SERVER}/images/${data.product.image}`}/>
                 </div>
 
                 <div className="w-3/4 mx-5 p-4 shadow-lg rounded-2xl bg-white h-full">
                   <div className="w-full flex justify-center mb-3">
                     <div className="w-1/2 mx-3 text-center">
                       <p><b>Date created: </b></p>
-                      <p>{moment(product.params.dateCreate).format('DD-MM-YYYY, HH:mm:ss')}</p>
+                      <p>{moment(data.product.dateCreate).format('DD-MM-YYYY, HH:mm:ss')}</p>
                     </div>
                     <div className="w-1/2 mx-3 text-center">
                       <p><b>Date updated: </b></p>
-                      <p>{moment(product.params.dateUpdate).format('DD-MM-YYYY, HH:mm:ss')}</p>
+                      <p>{moment(data.product.dateUpdate).format('DD-MM-YYYY, HH:mm:ss')}</p>
                     </div>
                   </div>
 
                   <div className="w-full flex justify-center mb-3 border-b border-gray-200 pb-6">
                     <div className="w-1/3 mx-3 text-center">
                       <p><b>Current price: </b></p>
-                      <p>{convertPrice(product.params.currentPrice)} </p>
-                      <p>{product.params.currentPrice > diffPrice ?
+                      <p>{convertPrice(data.product.currentPrice)} </p>
+                      <p>{data.product.currentPrice > diffPrice ?
                         <span
-                          className="text-red-500">+ {convertPrice(product.params.currentPrice - diffPrice)}</span> :
+                          className="text-red-500">+ {convertPrice(data.product.currentPrice - diffPrice)}</span> :
                         <span
-                          className="text-green-500">{convertPrice(product.params.currentPrice - diffPrice)}</span>}</p>
+                          className="text-green-500">{convertPrice(data.product.currentPrice - diffPrice)}</span>}</p>
                     </div>
                     <div className="w-1/3 mx-3 text-center">
                       <p><b>Maximum price: </b></p>
-                      <p>{convertPrice(product.params.maxPrice)} </p>
+                      <p>{convertPrice(data.product.maxPrice)} </p>
                       <p><span
-                        className="text-green-500">- {convertPrice(product.params.maxPrice - product.params.currentPrice)}</span>
+                        className="text-green-500">- {convertPrice(data.product.maxPrice - data.product.currentPrice)}</span>
                       </p>
                     </div>
                     <div className="w-1/3 mx-3 text-center">
                       <p><b>Minimum price: </b></p>
-                      <p>{convertPrice(product.params.minPrice)} </p>
+                      <p>{convertPrice(data.product.minPrice)} </p>
                       <p><span
-                        className="text-red-500">+ {convertPrice(product.params.currentPrice - product.params.minPrice)}</span>
+                        className="text-red-500">+ {convertPrice(data.product.currentPrice - data.product.minPrice)}</span>
                       </p>
                     </div>
                   </div>
@@ -110,7 +106,7 @@ const DetailProductPage = ({productId}) => {
                     {/*<a href="#">Delete</a>*/}
                     {/*<a href="#">Edit</a>*/}
                     <a className="link uppercase px-3 mr-3" target="_blank" rel="noreferrer"
-                    href={product.params.url}>Go to shop {product.params.shop.name}</a>
+                       href={data.product.url}>Go to shop {data.product.shop.name}</a>
                     <Subscribe productId={productId}/>
                   </div>
                 </div>
