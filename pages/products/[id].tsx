@@ -1,20 +1,13 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  useContext,
-  useRef,
-} from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useHttp } from '../../hooks/http.hook';
 import { BlockContent } from '../../components/BlockContent';
 import Head from 'next/head';
 import moment from 'moment';
-import { Loader } from '../../components/loader/Loader';
 import { convertPrice } from '../../helpers';
 import { IProduct } from '../../types/product';
 import { IPrice } from '../../types/price';
 import { Chart, Subscribe } from '../../components/productPage';
+import { Skeleton } from '../../components/skeleton/Skeleton';
 
 interface ProductData {
   product: IProduct;
@@ -56,13 +49,20 @@ const DetailProductPage = ({ productId }) => {
     return revPrices.reverse();
   }, [data]);
 
+  if (loading) {
+    return (
+      <BlockContent>
+        <Skeleton layout="productCard" />
+      </BlockContent>
+    );
+  }
+
   return (
     <>
       <Head>
         <title>{data?.product?.name} - Scanprices</title>
       </Head>
       <BlockContent>
-        {loading && <Loader visible={loading} />}
         {data?.product && !loading ? (
           <div>
             <div className="header-2">{data.product.name}</div>
