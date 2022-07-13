@@ -1,0 +1,12 @@
+/node_modules/*
+/node_modules/**
+/build/*
+/stories/*
+/.storybook/*
+**/node_modules/*
+/typings.d.ts
+/*.d.ts
+**/*.mjs
+
+
+
