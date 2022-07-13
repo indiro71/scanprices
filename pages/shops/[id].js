@@ -40,7 +40,7 @@ const DetailShopPage = ({shopId}) => {
 
     useEffect(() => {
         fetchShop();
-    }, [fetchShop]);
+    }, []);
 
     return (
         <>
