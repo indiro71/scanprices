@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import LeftMenu from '../template/LeftMenu';
 import { LayoutComponent } from '@indiro/layout';
+import LeftMenu from '../template/LeftMenu';
 import { AuthContext } from '../context/AuthContext';
 import { useAuth } from '../hooks/auth.hook';
 import '@indiro/layout/dist/index.css';
@@ -18,11 +18,17 @@ const project = () => {
 function MyApp({ Component, pageProps }): JSX.Element {
   const { token, login, logout } = useAuth();
   const isAuthenticated = !!token;
+  const getLayout =
+    Component.getLayout ??
+    ((page) => (
+      <LayoutComponent leftMenuItems={LeftMenu} project={project}>
+        {page}
+      </LayoutComponent>
+    ));
+
   return (
     <AuthContext.Provider value={{ token, login, logout, isAuthenticated }}>
-      <LayoutComponent leftMenuItems={LeftMenu} project={project}>
-        <Component {...pageProps} />
-      </LayoutComponent>
+      {getLayout(<Component {...pageProps} />)}
     </AuthContext.Provider>
   );
 }
