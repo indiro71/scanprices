@@ -18,55 +18,61 @@ export default function Pairs(): JSX.Element {
   };
 
   const getLongColor = (pair: IPair) => {
+    const colorParts = [];
     if (pair.longPercent > 0) {
+      colorParts.push('text-green-500');
       if (pair.longPercent > pair.leverage * pair.sellPercent)
-        return 'text-green-500 font-bold text-2xl';
+        colorParts.push('font-bold text-xl');
     } else {
+      colorParts.push('text-red-500');
       if (
         pair.longPercent < -pair.leverage * pair.buyPercent &&
         pair.longMargin < pair.marginLimit
       )
-        return 'text-red-500 text-2xl';
+        colorParts.push('text-xl');
       if (
         pair.longPercent < -pair.leverage * pair.buyPercent &&
         pair.longMargin > pair.marginLimit
       )
-        return 'text-red-500 font-bold';
+        colorParts.push('text-2xl');
       if (
         pair.longPercent < -pair.leverage * pair.buyMorePercent &&
         pair.longMargin + pair.marginDifference < pair.shortMargin &&
         pair.longMargin + pair.marginDifference < pair.marginLimit
       )
-        return 'text-yellow-500 text-2xl';
+        colorParts.push('text-yellow-500 text-xl');
     }
 
-    return 'text-xl';
+    return colorParts.join(' ');
   };
 
   const getShortColor = (pair: IPair) => {
+    const colorParts = [];
     if (pair.shortPercent > 0) {
+      colorParts.push('text-green-500');
       if (pair.shortPercent > pair.leverage * pair.sellPercent)
-        return 'text-green-500 font-bold text-2xl';
+        colorParts.push('font-bold text-xl');
     } else {
+      colorParts.push('text-red-500');
       if (
         pair.shortPercent < -pair.leverage * pair.buyPercent &&
         pair.shortMargin < pair.marginLimit
       )
-        return 'text-red-500 text-2xl';
+        colorParts.push('text-xl');
       if (
         pair.shortPercent < -pair.leverage * pair.buyPercent &&
         pair.shortMargin > pair.marginLimit
       )
-        return 'text-red-500 font-bold';
+        colorParts.push('text-2xl');
       if (
         pair.shortPercent < -pair.leverage * pair.buyMorePercent &&
         pair.shortMargin + pair.marginDifference < pair.longMargin &&
         pair.shortMargin + pair.marginDifference < pair.marginLimit
       )
-        return 'text-yellow-500 text-2xl';
+        colorParts.push('text-yellow-500 text-xl');
     }
 
-    return 'text-xl';
+    return colorParts.join(' ');
   };
 
   const transformPairs = (pairsData: IPair[]): any => {
