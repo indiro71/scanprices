@@ -1,7 +1,7 @@
 import React from 'react';
 
-export const Button = ({type = "submit", name, label}) => {
+export const Button = ({type = "submit", name, label, onClick = null}) => {
     return (
-        <button className="form-button" type={type} name={'action'}>{label}</button>
+        <button onClick={onClick} className="form-button" type={type} name={'action'}>{label}</button>
     );
 }

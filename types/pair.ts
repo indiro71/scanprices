@@ -1,0 +1,31 @@
+export interface IPair {
+  _id: string;
+  isActive: boolean;
+  name: string;
+  symbol: string;
+  contract: string;
+  leverage: number;
+  currentPrice: number;
+  sellPercent: number;
+  buyPercent: number;
+  buyMorePercent: number;
+  profit: number;
+  loss: number;
+  marginLimit: number;
+  marginDifference: number;
+  longPrice: number;
+  longMargin: number;
+  longPercent: number;
+  shortPrice: number;
+  shortMargin: number;
+  shortPercent: number;
+  dateCreate: Date;
+  dateUpdate: Date;
+  sellLongNotification: boolean;
+  buyMoreLongNotification: boolean;
+  buyLongNotification: boolean;
+  sellShortNotification: boolean;
+  buyMoreShortNotification: boolean;
+  buyShortNotification: boolean;
+  sendNotification: boolean;
+}

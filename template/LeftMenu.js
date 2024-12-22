@@ -34,7 +34,12 @@ function LeftMenu() {
       title: "Add shop",
       link: "/add-shop",
       auth: true
-    }
+    },
+    {
+      title: "Pairs",
+      link: "/pairs",
+      auth: true
+    },
   ];
 
   useEffect(() => {
