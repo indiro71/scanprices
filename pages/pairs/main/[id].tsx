@@ -107,6 +107,19 @@ const DetailPairPage = ({ pairId }) => {
                 />
               </Field>
               <Field>
+                <label htmlFor="marginStep">Шаг маржи</label>
+                <input
+                  name="marginStep"
+                  id="marginStep"
+                  {...register('marginStep', {
+                    required: true,
+                    valueAsNumber: true,
+                  })}
+                  type="number"
+                  className="validate"
+                />
+              </Field>
+              <Field>
                 <label htmlFor="marginDifference">Разница маржи</label>
                 <input
                   name="marginDifference"
