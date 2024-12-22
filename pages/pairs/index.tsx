@@ -69,7 +69,7 @@ export default function Pairs(): JSX.Element {
     return 'text-xl';
   };
 
-  const transformPairs = (pairsData: IPair[]) => {
+  const transformPairs = (pairsData: IPair[]): any => {
     return pairsData.map((pairData) => {
       const longPercent = getPercent(pairData.currentPrice, pairData.longPrice);
       const longLeveragePercent = (longPercent * pairData.leverage).toFixed(2);
