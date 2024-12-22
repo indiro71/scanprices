@@ -12,6 +12,7 @@ export interface IPair {
   profit: number;
   loss: number;
   marginLimit: number;
+  marginStep: number;
   marginDifference: number;
   longPrice: number;
   longMargin: number;

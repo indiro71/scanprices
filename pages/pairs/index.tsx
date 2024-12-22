@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import { useHttp } from '../../hooks/http.hook';
-import { BlockContent } from '../../components/BlockContent';
 import { IPair } from '../../types/pair';
 import { Table } from '../../components/Table';
 import { convertPrice } from '../../helpers';
@@ -109,40 +108,44 @@ export default function Pairs(): JSX.Element {
 
   const tableHeads = [
     'Name',
-    'Link',
+    'Long Percent',
+    'Short Percent',
+    'Step',
     'Current price',
     'Long Margin',
     'Short Margin',
-    'Long Percent',
-    'Short Percent',
+    'Set',
   ];
   const tableBody =
     pairs &&
     pairs.map((pair) => {
       return [
         <div>
-          <Link href={`/pairs/${pair._id}`}>
-            <a className="link">{pair.name}</a>
-          </Link>
-          (
-          <Link href={`/pairs/main/${pair._id}`}>
-            <a className="link">settings</a>
-          </Link>
-          )
+          <a
+            className="link"
+            target="_blank"
+            rel="noreferrer"
+            href={`https://futures.mexc.com/ru-RU/exchange/${pair.contract}`}
+          >
+            {pair.name}
+          </a>
         </div>,
-        <a
-          className="link"
-          target="_blank"
-          rel="noreferrer"
-          href={`https://futures.mexc.com/ru-RU/exchange/${pair.contract}`}
-        >
-          MEXC
-        </a>,
+        <div className={getLongColor(pair)}>{pair.longPercent}%</div>,
+        <div className={getShortColor(pair)}>{pair.shortPercent}%</div>,
+        <div>${pair.marginStep}</div>,
         <div>${pair.currentPrice}</div>,
         <div>{convertPrice(pair.longMargin, 'USD')}</div>,
         <div>{convertPrice(pair.shortMargin, 'USD')}</div>,
-        <div className={getLongColor(pair)}>{pair.longPercent}%</div>,
-        <div className={getShortColor(pair)}>{pair.shortPercent}%</div>,
+        <div>
+          <Link href={`/pairs/${pair._id}`}>
+            <a className="link">IF</a>
+          </Link>
+          (
+          <Link href={`/pairs/main/${pair._id}`}>
+            <a className="link">SET</a>
+          </Link>
+          )
+        </div>,
       ];
     });
 
@@ -161,9 +164,7 @@ export default function Pairs(): JSX.Element {
       <Head>
         <title>Pairs - Scanprices</title>
       </Head>
-      <BlockContent>
-        <Table headings={tableHeads} tableBody={tableBody} />
-      </BlockContent>
+      <Table headings={tableHeads} tableBody={tableBody} />
     </>
   );
 }
