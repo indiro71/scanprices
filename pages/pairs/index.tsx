@@ -18,8 +18,10 @@ export default function Pairs(): JSX.Element {
 
   const getLongColor = (pair: IPair) => {
     const colorParts = [];
-    const correctionBuyLongPercent =
+    const correctionBuyMoreLongPercent =
       Math.floor(pair.longMargin / pair.marginStep) * 0.5;
+    const correctionBuyLongPercent =
+      Math.floor(pair.longMargin / pair.marginStep) * 0.25;
     if (pair.longPercent > 0) {
       colorParts.push('text-green-500');
       if (pair.longPercent > pair.leverage * pair.sellPercent)
@@ -27,7 +29,8 @@ export default function Pairs(): JSX.Element {
     } else {
       colorParts.push('text-red-500');
       if (
-        pair.longPercent < -pair.leverage * pair.buyPercent &&
+        pair.longPercent <
+          -pair.leverage * (pair.buyPercent + correctionBuyLongPercent) &&
         pair.longMargin < pair.marginLimit
       )
         colorParts.push('text-xl');
@@ -38,7 +41,8 @@ export default function Pairs(): JSX.Element {
         colorParts.push('');
       if (
         pair.longPercent <
-          -pair.leverage * (pair.buyMorePercent + correctionBuyLongPercent) &&
+          -pair.leverage *
+            (pair.buyMorePercent + correctionBuyMoreLongPercent) &&
         pair.longMargin + pair.marginDifference < pair.shortMargin &&
         pair.longMargin + pair.marginDifference < pair.marginLimit
       )
@@ -50,8 +54,10 @@ export default function Pairs(): JSX.Element {
 
   const getShortColor = (pair: IPair) => {
     const colorParts = [];
-    const correctionBuyShortPercent =
+    const correctionBuyMoreShortPercent =
       Math.floor(pair.shortMargin / pair.marginStep) * 0.5;
+    const correctionBuyShortPercent =
+      Math.floor(pair.shortMargin / pair.marginStep) * 0.25;
     if (pair.shortPercent > 0) {
       colorParts.push('text-green-500');
       if (pair.shortPercent > pair.leverage * pair.sellPercent)
@@ -59,7 +65,8 @@ export default function Pairs(): JSX.Element {
     } else {
       colorParts.push('text-red-500');
       if (
-        pair.shortPercent < -pair.leverage * pair.buyPercent &&
+        pair.shortPercent <
+          -pair.leverage * (pair.buyPercent + correctionBuyShortPercent) &&
         pair.shortMargin < pair.marginLimit
       )
         colorParts.push('text-xl');
@@ -70,7 +77,8 @@ export default function Pairs(): JSX.Element {
         colorParts.push('');
       if (
         pair.shortPercent <
-          -pair.leverage * (pair.buyMorePercent + correctionBuyShortPercent) &&
+          -pair.leverage *
+            (pair.buyMorePercent + correctionBuyMoreShortPercent) &&
         pair.shortMargin + pair.marginDifference < pair.longMargin &&
         pair.shortMargin + pair.marginDifference < pair.marginLimit
       )
