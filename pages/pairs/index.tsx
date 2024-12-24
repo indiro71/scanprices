@@ -24,6 +24,8 @@ export default function Pairs(): JSX.Element {
       Math.floor(pair.longMargin / pair.marginStep) * 0.25;
     if (pair.longPercent > 0) {
       colorParts.push('text-green-500');
+      if (pair.longPercent > pair.leverage && pair.longMargin < pair.marginStep)
+        colorParts.push('text-yellow-500 text-xl');
       if (pair.longPercent > pair.leverage * pair.sellPercent)
         colorParts.push('font-bold text-xl');
     } else {
@@ -60,6 +62,11 @@ export default function Pairs(): JSX.Element {
       Math.floor(pair.shortMargin / pair.marginStep) * 0.25;
     if (pair.shortPercent > 0) {
       colorParts.push('text-green-500');
+      if (
+        pair.shortPercent > pair.leverage &&
+        pair.shortMargin < pair.marginStep
+      )
+        colorParts.push('text-yellow-500 text-xl');
       if (pair.shortPercent > pair.leverage * pair.sellPercent)
         colorParts.push('font-bold text-xl');
     } else {
