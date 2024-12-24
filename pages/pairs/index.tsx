@@ -18,6 +18,8 @@ export default function Pairs(): JSX.Element {
 
   const getLongColor = (pair: IPair) => {
     const colorParts = [];
+    const correctionBuyLongPercent =
+      Math.floor(pair.longMargin / pair.marginStep) * 0.5;
     if (pair.longPercent > 0) {
       colorParts.push('text-green-500');
       if (pair.longPercent > pair.leverage * pair.sellPercent)
@@ -33,9 +35,10 @@ export default function Pairs(): JSX.Element {
         pair.longPercent < -pair.leverage * pair.buyPercent &&
         pair.longMargin > pair.marginLimit
       )
-        colorParts.push('text-2xl');
+        colorParts.push('');
       if (
-        pair.longPercent < -pair.leverage * pair.buyMorePercent &&
+        pair.longPercent <
+          -pair.leverage * (pair.buyMorePercent + correctionBuyLongPercent) &&
         pair.longMargin + pair.marginDifference < pair.shortMargin &&
         pair.longMargin + pair.marginDifference < pair.marginLimit
       )
@@ -47,6 +50,8 @@ export default function Pairs(): JSX.Element {
 
   const getShortColor = (pair: IPair) => {
     const colorParts = [];
+    const correctionBuyShortPercent =
+      Math.floor(pair.shortMargin / pair.marginStep) * 0.5;
     if (pair.shortPercent > 0) {
       colorParts.push('text-green-500');
       if (pair.shortPercent > pair.leverage * pair.sellPercent)
@@ -62,9 +67,10 @@ export default function Pairs(): JSX.Element {
         pair.shortPercent < -pair.leverage * pair.buyPercent &&
         pair.shortMargin > pair.marginLimit
       )
-        colorParts.push('text-2xl');
+        colorParts.push('');
       if (
-        pair.shortPercent < -pair.leverage * pair.buyMorePercent &&
+        pair.shortPercent <
+          -pair.leverage * (pair.buyMorePercent + correctionBuyShortPercent) &&
         pair.shortMargin + pair.marginDifference < pair.longMargin &&
         pair.shortMargin + pair.marginDifference < pair.marginLimit
       )
