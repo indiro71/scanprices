@@ -16,12 +16,15 @@ export default function Pairs(): JSX.Element {
     return isShort ? -percent : percent;
   };
 
+  const buyMoreCoefficient = 1;
+  const buyCoefficient = 0.25;
+
   const getLongColor = (pair: IPair) => {
     const colorParts = [];
     const correctionBuyMoreLongPercent =
-      Math.floor(pair.longMargin / pair.marginStep) * 0.5;
+      Math.floor(pair.longMargin / pair.marginStep) * buyMoreCoefficient;
     const correctionBuyLongPercent =
-      Math.floor(pair.longMargin / pair.marginStep) * 0.25;
+      Math.floor(pair.longMargin / pair.marginStep) * buyCoefficient;
     if (pair.longPercent > 0) {
       colorParts.push('text-green-500');
       if (pair.longPercent > pair.leverage && pair.longMargin < pair.marginStep)
@@ -57,9 +60,9 @@ export default function Pairs(): JSX.Element {
   const getShortColor = (pair: IPair) => {
     const colorParts = [];
     const correctionBuyMoreShortPercent =
-      Math.floor(pair.shortMargin / pair.marginStep) * 0.5;
+      Math.floor(pair.shortMargin / pair.marginStep) * buyMoreCoefficient;
     const correctionBuyShortPercent =
-      Math.floor(pair.shortMargin / pair.marginStep) * 0.25;
+      Math.floor(pair.shortMargin / pair.marginStep) * buyCoefficient;
     if (pair.shortPercent > 0) {
       colorParts.push('text-green-500');
       if (
