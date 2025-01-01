@@ -135,8 +135,9 @@ export default function Pairs(): JSX.Element {
     'Name',
     'Long Percent',
     'Short Percent',
-    'Next | Critical Long',
-    'Next | Critical Short',
+    'Price',
+    'Long | Short Next',
+    'Long | Short Critical',
     'Long | Short Sell',
     'Long | Short Margin',
     'Set',
@@ -157,6 +158,7 @@ export default function Pairs(): JSX.Element {
         </div>,
         <div className={getLongColor(pair)}>{pair.longPercent}%</div>,
         <div className={getShortColor(pair)}>{pair.shortPercent}%</div>,
+        <div>{pair.currentPrice}</div>,
         <div className="cursor-pointer">
           <span
             onClick={() => copy(`${pair?.nextBuyLongPrice}`)}
@@ -168,6 +170,16 @@ export default function Pairs(): JSX.Element {
           </span>
           &nbsp;|&nbsp;
           <span
+            onClick={() => copy(`${pair?.nextBuyShortPrice}`)}
+            className={
+              pair?.nextBuyShortPriceWarning ? 'text-red-500' : 'text-green-500'
+            }
+          >
+            {pair?.nextBuyShortPrice}
+          </span>
+        </div>,
+        <div className="cursor-pointer">
+          <span
             onClick={() => copy(`${pair?.criticalBuyLongPrice}`)}
             className={
               pair?.criticalBuyLongPriceWarning
@@ -176,16 +188,6 @@ export default function Pairs(): JSX.Element {
             }
           >
             {pair?.criticalBuyLongPrice}
-          </span>
-        </div>,
-        <div className="cursor-pointer">
-          <span
-            onClick={() => copy(`${pair?.nextBuyShortPrice}`)}
-            className={
-              pair?.nextBuyShortPriceWarning ? 'text-red-500' : 'text-green-500'
-            }
-          >
-            {pair?.nextBuyShortPrice}
           </span>
           &nbsp;|&nbsp;
           <span
