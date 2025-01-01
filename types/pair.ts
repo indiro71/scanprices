@@ -29,4 +29,21 @@ export interface IPair {
   buyMoreShortNotification: boolean;
   buyShortNotification: boolean;
   sendNotification: boolean;
+  criticalPercent: number;
+  round: number;
+  order: number;
+  longLiquidatePrice: number;
+  nextBuyLongPrice: number;
+  criticalBuyLongPrice: number;
+  nextBuyLongPriceWarning: boolean;
+  criticalBuyLongPriceWarning: boolean;
+  shortLiquidatePrice: number;
+  nextBuyShortPrice: number;
+  criticalBuyShortPrice: number;
+  nextBuyShortPriceWarning: boolean;
+  criticalBuyShortPriceWarning: boolean;
+  sellShortPrice: number;
+  sellShortPriceWarning: boolean;
+  sellLongPrice: number;
+  sellLongPriceWarning: boolean;
 }

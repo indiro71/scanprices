@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
+import copy from 'copy-to-clipboard';
 import { useHttp } from '../../hooks/http.hook';
 import { IPair } from '../../types/pair';
 import { Table } from '../../components/Table';
@@ -121,7 +122,7 @@ export default function Pairs(): JSX.Element {
   const fetchPairs = useCallback(async () => {
     try {
       const data = await request<IPair[]>(`/scanprices/pairs/`, 'GET');
-      setPairs(transformPairs(data));
+      setPairs(transformPairs(data.sort((a, b) => a.order - b.order)));
     } catch (e) {}
   }, [request]);
 
@@ -134,10 +135,10 @@ export default function Pairs(): JSX.Element {
     'Name',
     'Long Percent',
     'Short Percent',
-    'Step',
-    'Current price',
-    'Long Margin',
-    'Short Margin',
+    'Next | Critical Long',
+    'Next | Critical Short',
+    'Long | Short Sell',
+    'Long | Short Margin',
     'Set',
   ];
   const tableBody =
@@ -156,10 +157,73 @@ export default function Pairs(): JSX.Element {
         </div>,
         <div className={getLongColor(pair)}>{pair.longPercent}%</div>,
         <div className={getShortColor(pair)}>{pair.shortPercent}%</div>,
-        <div>${pair.marginStep}</div>,
-        <div>${pair.currentPrice}</div>,
-        <div>{convertPrice(pair.longMargin, 'USD')}</div>,
-        <div>{convertPrice(pair.shortMargin, 'USD')}</div>,
+        <div className="cursor-pointer">
+          <span
+            onClick={() => copy(`${pair?.nextBuyLongPrice}`)}
+            className={
+              pair?.nextBuyLongPriceWarning ? 'text-red-500' : 'text-green-500'
+            }
+          >
+            {pair?.nextBuyLongPrice}
+          </span>
+          &nbsp;|&nbsp;
+          <span
+            onClick={() => copy(`${pair?.criticalBuyLongPrice}`)}
+            className={
+              pair?.criticalBuyLongPriceWarning
+                ? 'text-red-500'
+                : 'text-green-500'
+            }
+          >
+            {pair?.criticalBuyLongPrice}
+          </span>
+        </div>,
+        <div className="cursor-pointer">
+          <span
+            onClick={() => copy(`${pair?.nextBuyShortPrice}`)}
+            className={
+              pair?.nextBuyShortPriceWarning ? 'text-red-500' : 'text-green-500'
+            }
+          >
+            {pair?.nextBuyShortPrice}
+          </span>
+          &nbsp;|&nbsp;
+          <span
+            onClick={() => copy(`${pair?.criticalBuyShortPrice}`)}
+            className={
+              pair?.criticalBuyShortPriceWarning
+                ? 'text-red-500'
+                : 'text-green-500'
+            }
+          >
+            {pair?.criticalBuyShortPrice}
+          </span>
+        </div>,
+
+        <div className="cursor-pointer">
+          <span
+            onClick={() => copy(`${pair?.sellLongPrice}`)}
+            className={
+              pair?.sellLongPriceWarning ? 'text-red-500' : 'text-green-500'
+            }
+          >
+            {pair?.sellLongPrice}
+          </span>
+          &nbsp;|&nbsp;
+          <span
+            onClick={() => copy(`${pair?.sellShortPrice}`)}
+            className={
+              pair?.sellShortPriceWarning ? 'text-red-500' : 'text-green-500'
+            }
+          >
+            {pair?.sellShortPrice}
+          </span>
+        </div>,
+
+        <div>
+          {convertPrice(pair.longMargin, 'USD')} |{' '}
+          {convertPrice(pair.shortMargin, 'USD')}
+        </div>,
         <div>
           <Link href={`/pairs/${pair._id}`}>
             <a className="link">IF</a>
