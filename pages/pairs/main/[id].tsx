@@ -185,6 +185,32 @@ const DetailPairPage = ({ pairId }) => {
                 />
               </Field>
               <Field>
+                <label htmlFor="round">Количество знаков округления</label>
+                <input
+                  name="round"
+                  id="round"
+                  {...register('round', {
+                    required: true,
+                    valueAsNumber: true,
+                  })}
+                  type="number"
+                  className="validate"
+                />
+              </Field>
+              <Field>
+                <label htmlFor="order">Сортировка</label>
+                <input
+                  name="order"
+                  id="order"
+                  {...register('order', {
+                    required: true,
+                    valueAsNumber: true,
+                  })}
+                  type="number"
+                  className="validate"
+                />
+              </Field>
+              <Field>
                 <label htmlFor="isActive">Активно</label>
                 <input
                   name="isActive"
