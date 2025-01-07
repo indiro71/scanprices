@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import copy from 'copy-to-clipboard';
+import { useRouter } from 'next/router';
 import { useHttp } from '../../hooks/http.hook';
 import { IPair } from '../../types/pair';
 import { Table } from '../../components/Table';
@@ -11,6 +12,8 @@ import { convertPrice } from '../../helpers';
 export default function Pairs(): JSX.Element {
   const { request } = useHttp();
   const [pairs, setPairs] = useState<IPair[]>([]);
+  const router = useRouter();
+  const { withSettings } = router.query;
 
   const getPercent = (currentPrice, savingPrice, isShort?: boolean) => {
     const percent = (currentPrice / savingPrice) * 100 - 100;
@@ -137,15 +140,16 @@ export default function Pairs(): JSX.Element {
     'Short Percent',
     'Price',
     'Long | Short Next',
-    'Long | Short Critical',
+    // 'Long | Short Critical',
+    'Long | Short Liquidation',
     'Long | Short Sell',
     'Long | Short Margin',
-    'Set',
   ];
+
   const tableBody =
     pairs &&
     pairs.map((pair) => {
-      return [
+      const body = [
         <div>
           <a
             className="link"
@@ -178,28 +182,53 @@ export default function Pairs(): JSX.Element {
             {pair?.nextBuyShortPrice}
           </span>
         </div>,
-        <div className="cursor-pointer">
+        // critical prices
+        // <div className="cursor-pointer">
+        //   <span
+        //     onClick={() => copy(`${pair?.criticalBuyLongPrice}`)}
+        //     className={
+        //       pair?.criticalBuyLongPriceWarning
+        //         ? 'text-red-500'
+        //         : 'text-green-500'
+        //     }
+        //   >
+        //     {pair?.criticalBuyLongPrice}
+        //   </span>
+        //   &nbsp;|&nbsp;
+        //   <span
+        //     onClick={() => copy(`${pair?.criticalBuyShortPrice}`)}
+        //     className={
+        //       pair?.criticalBuyShortPriceWarning
+        //         ? 'text-red-500'
+        //         : 'text-green-500'
+        //     }
+        //   >
+        //     {pair?.criticalBuyShortPrice}
+        //   </span>
+        // </div>,
+
+        <div>
           <span
-            onClick={() => copy(`${pair?.criticalBuyLongPrice}`)}
             className={
-              pair?.criticalBuyLongPriceWarning
+              pair?.longLiquidatePrice > pair?.nextBuyLongPrice
                 ? 'text-red-500'
                 : 'text-green-500'
             }
           >
-            {pair?.criticalBuyLongPrice}
+            {pair?.longLiquidatePrice}
           </span>
+          {!pair?.autoAddLongMargin && <span className="text-red-500">*</span>}
           &nbsp;|&nbsp;
           <span
-            onClick={() => copy(`${pair?.criticalBuyShortPrice}`)}
             className={
-              pair?.criticalBuyShortPriceWarning
+              pair?.shortLiquidatePrice < pair?.nextBuyShortPrice
                 ? 'text-red-500'
                 : 'text-green-500'
             }
           >
-            {pair?.criticalBuyShortPrice}
+            {pair?.shortLiquidatePrice}
           </span>
+          {!pair?.autoAddShortMargin && <span className="text-red-500">*</span>}
         </div>,
 
         <div className="cursor-pointer">
@@ -226,18 +255,28 @@ export default function Pairs(): JSX.Element {
           {convertPrice(pair.longMargin, 'USD')} |{' '}
           {convertPrice(pair.shortMargin, 'USD')}
         </div>,
-        <div>
-          <Link href={`/pairs/${pair._id}`}>
-            <a className="link">IF</a>
-          </Link>
-          (
-          <Link href={`/pairs/main/${pair._id}`}>
-            <a className="link">SET</a>
-          </Link>
-          )
-        </div>,
       ];
+
+      if (withSettings === 'true') {
+        body.push(
+          <div>
+            <Link href={`/pairs/${pair._id}`}>
+              <a className="link">IF</a>
+            </Link>
+            (
+            <Link href={`/pairs/main/${pair._id}`}>
+              <a className="link">SET</a>
+            </Link>
+            )
+          </div>,
+        );
+      }
+      return body;
     });
+
+  if (withSettings === 'true') {
+    tableHeads.push('Set');
+  }
 
   useEffect(() => {
     fetchPairs();
