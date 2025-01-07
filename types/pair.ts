@@ -46,4 +46,6 @@ export interface IPair {
   sellShortPriceWarning: boolean;
   sellLongPrice: number;
   sellLongPriceWarning: boolean;
+  autoAddLongMargin: boolean;
+  autoAddShortMargin: boolean;
 }
