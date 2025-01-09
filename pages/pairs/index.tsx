@@ -136,10 +136,9 @@ export default function Pairs(): JSX.Element {
 
   const tableHeads = [
     'Name',
-    'Long Percent',
-    'Short Percent',
-    'Price',
+    'Long | Short Percent',
     'Long | Short Next',
+    'Price',
     // 'Long | Short Critical',
     'Long | Short Liquidation',
     'Long | Short Sell',
@@ -160,9 +159,11 @@ export default function Pairs(): JSX.Element {
             {pair.name}
           </a>
         </div>,
-        <div className={getLongColor(pair)}>{pair.longPercent}%</div>,
-        <div className={getShortColor(pair)}>{pair.shortPercent}%</div>,
-        <div>{pair.currentPrice}</div>,
+        <div>
+          <span className={getLongColor(pair)}>{pair.longPercent}%</span>
+          &nbsp;|&nbsp;
+          <span className={getShortColor(pair)}>{pair.shortPercent}%</span>
+        </div>,
         <div className="cursor-pointer">
           <span
             onClick={() => copy(`${pair?.nextBuyLongPrice}`)}
@@ -182,6 +183,7 @@ export default function Pairs(): JSX.Element {
             {pair?.nextBuyShortPrice}
           </span>
         </div>,
+        <div>{pair.currentPrice}</div>,
         // critical prices
         // <div className="cursor-pointer">
         //   <span
