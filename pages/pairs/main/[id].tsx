@@ -94,19 +94,6 @@ const DetailPairPage = ({ pairId }) => {
                 />
               </Field>
               <Field>
-                <label htmlFor="marginLimit">Лимит маржи</label>
-                <input
-                  name="marginLimit"
-                  id="marginLimit"
-                  {...register('marginLimit', {
-                    required: true,
-                    valueAsNumber: true,
-                  })}
-                  type="number"
-                  className="validate"
-                />
-              </Field>
-              <Field>
                 <label htmlFor="marginStep">Шаг маржи</label>
                 <input
                   name="marginStep"
