@@ -20,88 +20,6 @@ export default function Pairs(): JSX.Element {
     return isShort ? -percent : percent;
   };
 
-  const buyMoreCoefficient = 1;
-  const buyCoefficient = 0.25;
-
-  const getLongColor = (pair: IPair) => {
-    const colorParts = [];
-    const correctionBuyMoreLongPercent =
-      Math.floor(pair.longMargin / pair.marginStep) * buyMoreCoefficient;
-    const correctionBuyLongPercent =
-      Math.floor(pair.longMargin / pair.marginStep) * buyCoefficient;
-    if (pair.longPercent > 0) {
-      colorParts.push('text-green-500');
-      if (pair.longPercent > pair.leverage && pair.longMargin < pair.marginStep)
-        colorParts.push('text-yellow-500 text-xl');
-      if (pair.longPercent > pair.leverage * pair.sellPercent)
-        colorParts.push('font-bold text-xl');
-    } else {
-      colorParts.push('text-red-500');
-      if (
-        pair.longPercent <
-          -pair.leverage * (pair.buyPercent + correctionBuyLongPercent) &&
-        pair.longMargin < pair.marginLimit
-      )
-        colorParts.push('text-xl');
-      if (
-        pair.longPercent < -pair.leverage * pair.buyPercent &&
-        pair.longMargin > pair.marginLimit
-      )
-        colorParts.push('');
-      if (
-        pair.longPercent <
-          -pair.leverage *
-            (pair.buyMorePercent + correctionBuyMoreLongPercent) &&
-        pair.longMargin + pair.marginDifference < pair.shortMargin &&
-        pair.longMargin + pair.marginDifference < pair.marginLimit
-      )
-        colorParts.push('text-yellow-500 text-xl');
-    }
-
-    return colorParts.join(' ');
-  };
-
-  const getShortColor = (pair: IPair) => {
-    const colorParts = [];
-    const correctionBuyMoreShortPercent =
-      Math.floor(pair.shortMargin / pair.marginStep) * buyMoreCoefficient;
-    const correctionBuyShortPercent =
-      Math.floor(pair.shortMargin / pair.marginStep) * buyCoefficient;
-    if (pair.shortPercent > 0) {
-      colorParts.push('text-green-500');
-      if (
-        pair.shortPercent > pair.leverage &&
-        pair.shortMargin < pair.marginStep
-      )
-        colorParts.push('text-yellow-500 text-xl');
-      if (pair.shortPercent > pair.leverage * pair.sellPercent)
-        colorParts.push('font-bold text-xl');
-    } else {
-      colorParts.push('text-red-500');
-      if (
-        pair.shortPercent <
-          -pair.leverage * (pair.buyPercent + correctionBuyShortPercent) &&
-        pair.shortMargin < pair.marginLimit
-      )
-        colorParts.push('text-xl');
-      if (
-        pair.shortPercent < -pair.leverage * pair.buyPercent &&
-        pair.shortMargin > pair.marginLimit
-      )
-        colorParts.push('');
-      if (
-        pair.shortPercent <
-          -pair.leverage *
-            (pair.buyMorePercent + correctionBuyMoreShortPercent) &&
-        pair.shortMargin + pair.marginDifference < pair.longMargin &&
-        pair.shortMargin + pair.marginDifference < pair.marginLimit
-      )
-        colorParts.push('text-yellow-500 text-xl');
-    }
-
-    return colorParts.join(' ');
-  };
-
   const transformPairs = (pairsData: IPair[]): any => {
     return pairsData.map((pairData) => {
       const longPercent = getPercent(pairData.currentPrice, pairData.longPrice);
@@ -160,9 +78,19 @@ export default function Pairs(): JSX.Element {
           </a>
         </div>,
         <div>
-          <span className={getLongColor(pair)}>{pair.longPercent}%</span>
+          <span
+            className={pair.longPercent > 0 ? 'text-green-500' : 'text-red-500'}
+          >
+            {pair.longPercent || 'Add'}%
+          </span>
           &nbsp;|&nbsp;
-          <span className={getShortColor(pair)}>{pair.shortPercent}%</span>
+          <span
+            className={
+              pair.shortPercent > 0 ? 'text-green-500' : 'text-red-500'
+            }
+          >
+            {pair.shortPercent || 'Add'}%
+          </span>
         </div>,
         <div className="cursor-pointer">
           <span
@@ -183,7 +111,12 @@ export default function Pairs(): JSX.Element {
             {pair?.nextBuyShortPrice}
           </span>
         </div>,
-        <div>{pair.currentPrice}</div>,
+        <div>
+          {pair.currentPrice}{' '}
+          {pair?.ordersCount !== 4 && (
+            <span className="text-xs text-red-500"> ({pair?.ordersCount})</span>
+          )}
+        </div>,
         // critical prices
         // <div className="cursor-pointer">
         //   <span

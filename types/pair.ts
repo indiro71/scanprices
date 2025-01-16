@@ -11,7 +11,6 @@ export interface IPair {
   buyMorePercent: number;
   profit: number;
   loss: number;
-  marginLimit: number;
   marginStep: number;
   marginDifference: number;
   longPrice: number;
@@ -40,6 +39,7 @@ export interface IPair {
   shortLiquidatePrice: number;
   nextBuyShortPrice: number;
   criticalBuyShortPrice: number;
+  ordersCount: number;
   nextBuyShortPriceWarning: boolean;
   criticalBuyShortPriceWarning: boolean;
   sellShortPrice: number;
