@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import { useHttp } from '../../hooks/http.hook';
 import { IPair } from '../../types/pair';
 import { Table } from '../../components/Table';
-import { convertPrice } from '../../helpers';
 
 export default function Pairs(): JSX.Element {
   const { request } = useHttp();
@@ -101,6 +100,10 @@ export default function Pairs(): JSX.Element {
           >
             {pair?.nextBuyLongPrice}
           </span>
+          {pair?.nextBuyLongPriceWarning &&
+            pair?.currentPrice < pair?.nextBuyLongPrice && (
+              <span className="text-red-500">*</span>
+            )}
           &nbsp;|&nbsp;
           <span
             onClick={() => copy(`${pair?.nextBuyShortPrice}`)}
@@ -110,37 +113,15 @@ export default function Pairs(): JSX.Element {
           >
             {pair?.nextBuyShortPrice}
           </span>
+          {pair?.nextBuyShortPriceWarning &&
+            pair?.currentPrice > pair?.nextBuyShortPrice && (
+              <span className="text-red-500">*</span>
+            )}
         </div>,
         <div>
           {pair.currentPrice}{' '}
-          {pair?.ordersCount !== 4 && (
-            <span className="text-xs text-red-500"> ({pair?.ordersCount})</span>
-          )}
+          <span className="text-xs"> ({pair?.ordersCount})</span>
         </div>,
-        // critical prices
-        // <div className="cursor-pointer">
-        //   <span
-        //     onClick={() => copy(`${pair?.criticalBuyLongPrice}`)}
-        //     className={
-        //       pair?.criticalBuyLongPriceWarning
-        //         ? 'text-red-500'
-        //         : 'text-green-500'
-        //     }
-        //   >
-        //     {pair?.criticalBuyLongPrice}
-        //   </span>
-        //   &nbsp;|&nbsp;
-        //   <span
-        //     onClick={() => copy(`${pair?.criticalBuyShortPrice}`)}
-        //     className={
-        //       pair?.criticalBuyShortPriceWarning
-        //         ? 'text-red-500'
-        //         : 'text-green-500'
-        //     }
-        //   >
-        //     {pair?.criticalBuyShortPrice}
-        //   </span>
-        // </div>,
 
         <div>
           <span
@@ -153,6 +134,10 @@ export default function Pairs(): JSX.Element {
             {pair?.longLiquidatePrice}
           </span>
           {!pair?.autoAddLongMargin && <span className="text-red-500">*</span>}
+          {pair?.longLiquidatePrice > pair?.nextBuyLongPrice &&
+            !pair?.autoAddLongMargin && (
+              <span className="text-red-500 text-2xl">WARNING</span>
+            )}
           &nbsp;|&nbsp;
           <span
             className={
@@ -164,6 +149,10 @@ export default function Pairs(): JSX.Element {
             {pair?.shortLiquidatePrice}
           </span>
           {!pair?.autoAddShortMargin && <span className="text-red-500">*</span>}
+          {pair?.shortLiquidatePrice < pair?.nextBuyShortPrice &&
+            !pair?.autoAddShortMargin && (
+              <span className="text-red-500 text-2xl">WARNING</span>
+            )}
         </div>,
 
         <div className="cursor-pointer">
@@ -187,8 +176,23 @@ export default function Pairs(): JSX.Element {
         </div>,
 
         <div>
-          {convertPrice(pair.longMargin, 'USD')} |{' '}
-          {convertPrice(pair.shortMargin, 'USD')}
+          <span>
+            {Math.round(pair.longMargin)}
+            {pair.longAllMargin - pair.longMargin > 0 && (
+              <span className="text-xs">
+                ({Math.round(pair.longAllMargin - pair.longMargin)})
+              </span>
+            )}
+          </span>{' '}
+          |{' '}
+          <span>
+            {Math.round(pair.shortMargin)}{' '}
+            {pair.shortAllMargin - pair.shortMargin > 0 && (
+              <span className="text-xs">
+                ({Math.round(pair.shortAllMargin - pair.shortMargin)})
+              </span>
+            )}
+          </span>
         </div>,
       ];
 
