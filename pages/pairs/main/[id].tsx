@@ -94,6 +94,19 @@ const DetailPairPage = ({ pairId }) => {
                 />
               </Field>
               <Field>
+                <label htmlFor="marginLimit">Лимит маржи</label>
+                <input
+                  name="marginLimit"
+                  id="marginLimit"
+                  {...register('marginLimit', {
+                    required: true,
+                    valueAsNumber: true,
+                  })}
+                  type="number"
+                  className="validate"
+                />
+              </Field>
+              <Field>
                 <label htmlFor="marginStep">Шаг маржи</label>
                 <input
                   name="marginStep"
@@ -146,24 +159,11 @@ const DetailPairPage = ({ pairId }) => {
                 />
               </Field>
               <Field>
-                <label htmlFor="buyPercent">Процент покупки</label>
+                <label htmlFor="buyCoefficient">Коэффициент покупки</label>
                 <input
-                  name="buyPercent"
-                  id="buyPercent"
-                  {...register('buyPercent', {
-                    required: true,
-                    valueAsNumber: true,
-                  })}
-                  type="number"
-                  className="validate"
-                />
-              </Field>
-              <Field>
-                <label htmlFor="buyMorePercent">Процент докупания</label>
-                <input
-                  name="buyMorePercent"
-                  id="buyMorePercent"
-                  {...register('buyMorePercent', {
+                  name="buyCoefficient"
+                  id="buyCoefficient"
+                  {...register('buyCoefficient', {
                     required: true,
                     valueAsNumber: true,
                   })}
@@ -219,73 +219,13 @@ const DetailPairPage = ({ pairId }) => {
                 />
               </Field>
               <Field>
-                <label htmlFor="sellLongNotification">
-                  Sell Long Notification
+                <label htmlFor="notificationSending">
+                  Notification Sending
                 </label>
                 <input
-                  name="sellLongNotification"
-                  id="sellLongNotification"
-                  {...register('sellLongNotification')}
-                  type="checkbox"
-                  className="validate"
-                />
-              </Field>
-              <Field>
-                <label htmlFor="buyMoreLongNotification">
-                  Buy More Long Notification
-                </label>
-                <input
-                  name="buyMoreLongNotification"
-                  id="buyMoreLongNotification"
-                  {...register('buyMoreLongNotification')}
-                  type="checkbox"
-                  className="validate"
-                />
-              </Field>
-              <Field>
-                <label htmlFor="buyLongNotification">
-                  Buy Long Notification
-                </label>
-                <input
-                  name="buyLongNotification"
-                  id="buyLongNotification"
-                  {...register('buyLongNotification')}
-                  type="checkbox"
-                  className="validate"
-                />
-              </Field>
-              <Field>
-                <label htmlFor="sellShortNotification">
-                  Sell Short Notification
-                </label>
-                <input
-                  name="sellShortNotification"
-                  id="sellShortNotification"
-                  {...register('sellShortNotification')}
-                  type="checkbox"
-                  className="validate"
-                />
-              </Field>
-              <Field>
-                <label htmlFor="buyMoreShortNotification">
-                  Buy More Short Notification
-                </label>
-                <input
-                  name="buyMoreShortNotification"
-                  id="buyMoreShortNotification"
-                  {...register('buyMoreShortNotification')}
-                  type="checkbox"
-                  className="validate"
-                />
-              </Field>
-              <Field>
-                <label htmlFor="buyShortNotification">
-                  Buy Short Notification
-                </label>
-                <input
-                  name="buyShortNotification"
-                  id="buyShortNotification"
-                  {...register('buyShortNotification')}
+                  name="notificationSending"
+                  id="notificationSending"
+                  {...register('notificationSending')}
                   type="checkbox"
                   className="validate"
                 />
