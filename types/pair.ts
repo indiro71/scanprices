@@ -16,6 +16,7 @@ export interface IPair {
   longMargin: number;
   longAllMargin: number;
   longPercent: number;
+  marginLimit: number;
   shortPrice: number;
   shortMargin: number;
   shortAllMargin: number;
