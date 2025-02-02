@@ -10,13 +10,15 @@ export interface IPair {
   buyCoefficient: number;
   profit: number;
   loss: number;
-  marginStep: number;
+  shortMarginStep: number;
+  longMarginStep: number;
   marginDifference: number;
   longPrice: number;
   longMargin: number;
   longAllMargin: number;
   longPercent: number;
-  marginLimit: number;
+  shortMarginLimit: number;
+  longMarginLimit: number;
   shortPrice: number;
   shortMargin: number;
   shortAllMargin: number;
