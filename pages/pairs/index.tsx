@@ -40,37 +40,36 @@ export default function Pairs(): JSX.Element {
     });
   };
 
+  const filteredData = () => {
+    const canBeSold = [];
+    const needNextStep = [];
+    const needAutoBuy = [];
+
+    pairs.forEach((pair) => {
+      if (pair.longPercent > 5 || pair.shortPercent > 5) {
+        canBeSold.push(pair);
+      } else if (
+        pair.nextBuyLongPriceWarning ||
+        pair.nextBuyShortPriceWarning
+      ) {
+        needNextStep.push(pair);
+      } else if (!pair.autoAddLongMargin || !pair.autoAddShortMargin) {
+        needAutoBuy.push(pair);
+      }
+    });
+
+    return [...canBeSold, ...needNextStep, ...needAutoBuy];
+  };
+
   const fetchPairs = useCallback(async () => {
     try {
       const data = await request<IPair[]>(`/scanprices/pairs/`, 'GET');
       const transformedData: IPair[] = transformPairs(
         data.sort((a, b) => a.order - b.order),
       );
-
-      if (allData) {
-        setPairs(transformedData);
-      }
-
-      const canBeSold = [];
-      const needNextStep = [];
-      const needAutoBuy = [];
-
-      transformedData.forEach((pair) => {
-        if (pair.longPercent > 5 || pair.shortPercent > 5) {
-          canBeSold.push(pair);
-        } else if (
-          pair.nextBuyLongPriceWarning ||
-          pair.nextBuyShortPriceWarning
-        ) {
-          needNextStep.push(pair);
-        } else if (!pair.autoAddLongMargin || !pair.autoAddShortMargin) {
-          needAutoBuy.push(pair);
-        }
-      });
-
-      setPairs([...canBeSold, ...needNextStep, ...needAutoBuy]);
+      setPairs(transformedData);
     } catch (e) {}
-  }, [request, allData]);
+  }, [request]);
 
   const deletePair = async (deletePairId) => {
     await request<IPair>(`/scanprices/pairs/${deletePairId}`, 'DELETE');
@@ -78,7 +77,14 @@ export default function Pairs(): JSX.Element {
   };
 
   const tableHeads = [
-    'Name',
+    <div>
+      Name &nbsp;
+      <input
+        checked={allData}
+        type="checkbox"
+        onChange={() => setAllData((prevState) => !prevState)}
+      />
+    </div>,
     'Long | Short Percent',
     'Long | Short Next',
     'Price',
@@ -90,150 +96,173 @@ export default function Pairs(): JSX.Element {
 
   const tableBody =
     pairs &&
-    pairs.map((pair) => {
-      const body = [
-        <div>
-          <a
-            className="link"
-            target="_blank"
-            rel="noreferrer"
-            href={`https://futures.mexc.com/ru-RU/exchange/${pair.contract}`}
-          >
-            {pair.name}
-          </a>
-        </div>,
-        <div>
-          <span
-            className={pair.longPercent > 0 ? 'text-green-500' : 'text-red-500'}
-          >
-            {pair.longPercent || 'Add'}%
-          </span>
-          &nbsp;|&nbsp;
-          <span
-            className={
-              pair.shortPercent > 0 ? 'text-green-500' : 'text-red-500'
-            }
-          >
-            {pair.shortPercent || 'Add'}%
-          </span>
-        </div>,
-        <div className="cursor-pointer">
-          <span
-            onClick={() => copy(`${pair?.nextBuyLongPrice}`)}
-            className={
-              pair?.nextBuyLongPriceWarning ? 'text-red-500' : 'text-green-500'
-            }
-          >
-            {pair?.nextBuyLongPrice}
-          </span>
-          {pair?.nextBuyLongPriceWarning &&
-            pair?.currentPrice < pair?.nextBuyLongPrice && (
-              <span className="text-red-500">*</span>
-            )}
-          &nbsp;|&nbsp;
-          <span
-            onClick={() => copy(`${pair?.nextBuyShortPrice}`)}
-            className={
-              pair?.nextBuyShortPriceWarning ? 'text-red-500' : 'text-green-500'
-            }
-          >
-            {pair?.nextBuyShortPrice}
-          </span>
-          {pair?.nextBuyShortPriceWarning &&
-            pair?.currentPrice > pair?.nextBuyShortPrice && (
-              <span className="text-red-500">*</span>
-            )}
-        </div>,
-        <div>
-          {pair.currentPrice}{' '}
-          <span className="text-xs"> ({pair?.ordersCount})</span>
-        </div>,
+    pairs
+      .filter((pair) => {
+        if (!allData) return true;
 
-        <div>
-          <span
-            className={
-              pair?.longLiquidatePrice > pair?.nextBuyLongPrice
-                ? 'text-red-500'
-                : 'text-green-500'
-            }
-          >
-            {pair?.longLiquidatePrice}
-          </span>
-          {!pair?.autoAddLongMargin && <span className="text-red-500">*</span>}
-          {pair?.longLiquidatePrice > pair?.nextBuyLongPrice &&
-            !pair?.autoAddLongMargin && (
-              <span className="text-red-500 text-2xl">WARNING</span>
-            )}
-          &nbsp;|&nbsp;
-          <span
-            className={
-              pair?.shortLiquidatePrice < pair?.nextBuyShortPrice
-                ? 'text-red-500'
-                : 'text-green-500'
-            }
-          >
-            {pair?.shortLiquidatePrice}
-          </span>
-          {!pair?.autoAddShortMargin && <span className="text-red-500">*</span>}
-          {pair?.shortLiquidatePrice < pair?.nextBuyShortPrice &&
-            !pair?.autoAddShortMargin && (
-              <span className="text-red-500 text-2xl">WARNING</span>
-            )}
-        </div>,
-
-        <div className="cursor-pointer">
-          <span
-            onClick={() => copy(`${pair?.sellLongPrice}`)}
-            className={pair?.sellLongPriceWarning ? '' : 'text-green-500'}
-          >
-            {pair?.sellLongPrice}
-          </span>
-          &nbsp;|&nbsp;
-          <span
-            onClick={() => copy(`${pair?.sellShortPrice}`)}
-            className={pair?.sellShortPriceWarning ? '' : 'text-green-500'}
-          >
-            {pair?.sellShortPrice}
-          </span>
-        </div>,
-
-        <div>
-          <span>
-            {Math.round(pair.longMargin)}
-            {pair.longAllMargin - pair.longMargin > 0 && (
-              <span className="text-xs">
-                ({Math.round(pair.longAllMargin - pair.longMargin)})
-              </span>
-            )}
-          </span>{' '}
-          |{' '}
-          <span>
-            {Math.round(pair.shortMargin)}{' '}
-            {pair.shortAllMargin - pair.shortMargin > 0 && (
-              <span className="text-xs">
-                ({Math.round(pair.shortAllMargin - pair.shortMargin)})
-              </span>
-            )}
-          </span>
-        </div>,
-      ];
-
-      if (withSettings === 'true') {
-        body.push(
-          <div>
-            <Link href={`/pairs/${pair._id}`}>
-              <a className="link">IF</a>
-            </Link>
-            (
-            <Link href={`/pairs/main/${pair._id}`}>
-              <a className="link">SET</a>
-            </Link>
-            )
-          </div>,
+        return (
+          pair.longPercent > 5 ||
+          pair.shortPercent > 5 ||
+          pair.nextBuyLongPriceWarning ||
+          pair.nextBuyShortPriceWarning ||
+          !pair.autoAddLongMargin ||
+          !pair.autoAddShortMargin
         );
-      }
-      return body;
-    });
+      })
+      .map((pair) => {
+        const body = [
+          <div>
+            <a
+              className="link"
+              target="_blank"
+              rel="noreferrer"
+              href={`https://futures.mexc.com/ru-RU/exchange/${pair.contract}`}
+            >
+              {pair.name}
+            </a>
+          </div>,
+          <div>
+            <span
+              className={
+                pair.longPercent > 0 ? 'text-green-500' : 'text-red-500'
+              }
+            >
+              {pair.longPercent || 'Add'}%
+            </span>
+            &nbsp;|&nbsp;
+            <span
+              className={
+                pair.shortPercent > 0 ? 'text-green-500' : 'text-red-500'
+              }
+            >
+              {pair.shortPercent || 'Add'}%
+            </span>
+          </div>,
+          <div className="cursor-pointer">
+            <span
+              onClick={() => copy(`${pair?.nextBuyLongPrice}`)}
+              className={
+                pair?.nextBuyLongPriceWarning
+                  ? 'text-red-500'
+                  : 'text-green-500'
+              }
+            >
+              {pair?.nextBuyLongPrice}
+            </span>
+            {pair?.nextBuyLongPriceWarning &&
+              pair?.currentPrice < pair?.nextBuyLongPrice && (
+                <span className="text-red-500">*</span>
+              )}
+            &nbsp;|&nbsp;
+            <span
+              onClick={() => copy(`${pair?.nextBuyShortPrice}`)}
+              className={
+                pair?.nextBuyShortPriceWarning
+                  ? 'text-red-500'
+                  : 'text-green-500'
+              }
+            >
+              {pair?.nextBuyShortPrice}
+            </span>
+            {pair?.nextBuyShortPriceWarning &&
+              pair?.currentPrice > pair?.nextBuyShortPrice && (
+                <span className="text-red-500">*</span>
+              )}
+          </div>,
+          <div>
+            {pair.currentPrice}{' '}
+            <span className="text-xs"> ({pair?.ordersCount})</span>
+          </div>,
+
+          <div>
+            <span
+              className={
+                pair?.longLiquidatePrice > pair?.nextBuyLongPrice
+                  ? 'text-red-500'
+                  : 'text-green-500'
+              }
+            >
+              {pair?.longLiquidatePrice}
+            </span>
+            {!pair?.autoAddLongMargin && (
+              <span className="text-red-500">*</span>
+            )}
+            {pair?.longLiquidatePrice > pair?.nextBuyLongPrice &&
+              !pair?.autoAddLongMargin && (
+                <span className="text-red-500 text-2xl">WARNING</span>
+              )}
+            &nbsp;|&nbsp;
+            <span
+              className={
+                pair?.shortLiquidatePrice < pair?.nextBuyShortPrice
+                  ? 'text-red-500'
+                  : 'text-green-500'
+              }
+            >
+              {pair?.shortLiquidatePrice}
+            </span>
+            {!pair?.autoAddShortMargin && (
+              <span className="text-red-500">*</span>
+            )}
+            {pair?.shortLiquidatePrice < pair?.nextBuyShortPrice &&
+              !pair?.autoAddShortMargin && (
+                <span className="text-red-500 text-2xl">WARNING</span>
+              )}
+          </div>,
+
+          <div className="cursor-pointer">
+            <span
+              onClick={() => copy(`${pair?.sellLongPrice}`)}
+              className={pair?.sellLongPriceWarning ? '' : 'text-green-500'}
+            >
+              {pair?.sellLongPrice}
+            </span>
+            &nbsp;|&nbsp;
+            <span
+              onClick={() => copy(`${pair?.sellShortPrice}`)}
+              className={pair?.sellShortPriceWarning ? '' : 'text-green-500'}
+            >
+              {pair?.sellShortPrice}
+            </span>
+          </div>,
+
+          <div>
+            <span>
+              {Math.round(pair.longMargin)}
+              {pair.longAllMargin - pair.longMargin > 0 && (
+                <span className="text-xs">
+                  ({Math.round(pair.longAllMargin - pair.longMargin)})
+                </span>
+              )}
+            </span>{' '}
+            |{' '}
+            <span>
+              {Math.round(pair.shortMargin)}{' '}
+              {pair.shortAllMargin - pair.shortMargin > 0 && (
+                <span className="text-xs">
+                  ({Math.round(pair.shortAllMargin - pair.shortMargin)})
+                </span>
+              )}
+            </span>
+          </div>,
+        ];
+
+        if (withSettings === 'true') {
+          body.push(
+            <div>
+              <Link href={`/pairs/${pair._id}`}>
+                <a className="link">IF</a>
+              </Link>
+              (
+              <Link href={`/pairs/main/${pair._id}`}>
+                <a className="link">SET</a>
+              </Link>
+              )
+            </div>,
+          );
+        }
+        return body;
+      });
 
   if (withSettings === 'true') {
     tableHeads.push('Set');
