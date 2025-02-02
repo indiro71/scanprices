@@ -158,18 +158,14 @@ export default function Pairs(): JSX.Element {
         <div className="cursor-pointer">
           <span
             onClick={() => copy(`${pair?.sellLongPrice}`)}
-            className={
-              pair?.sellLongPriceWarning ? 'text-red-500' : 'text-green-500'
-            }
+            className={pair?.sellLongPriceWarning ? '' : 'text-green-500'}
           >
             {pair?.sellLongPrice}
           </span>
           &nbsp;|&nbsp;
           <span
             onClick={() => copy(`${pair?.sellShortPrice}`)}
-            className={
-              pair?.sellShortPriceWarning ? 'text-red-500' : 'text-green-500'
-            }
+            className={pair?.sellShortPriceWarning ? '' : 'text-green-500'}
           >
             {pair?.sellShortPrice}
           </span>

@@ -94,11 +94,11 @@ const DetailPairPage = ({ pairId }) => {
                 />
               </Field>
               <Field>
-                <label htmlFor="marginLimit">Лимит маржи</label>
+                <label htmlFor="shortMarginLimit">Лимит маржи шорта</label>
                 <input
-                  name="marginLimit"
-                  id="marginLimit"
-                  {...register('marginLimit', {
+                  name="shortMarginLimit"
+                  id="shortMarginLimit"
+                  {...register('shortMarginLimit', {
                     required: true,
                     valueAsNumber: true,
                   })}
@@ -107,11 +107,37 @@ const DetailPairPage = ({ pairId }) => {
                 />
               </Field>
               <Field>
-                <label htmlFor="marginStep">Шаг маржи</label>
+                <label htmlFor="longMarginLimit">Лимит маржи лонга</label>
                 <input
-                  name="marginStep"
-                  id="marginStep"
-                  {...register('marginStep', {
+                  name="longMarginLimit"
+                  id="longMarginLimit"
+                  {...register('longMarginLimit', {
+                    required: true,
+                    valueAsNumber: true,
+                  })}
+                  type="number"
+                  className="validate"
+                />
+              </Field>
+              <Field>
+                <label htmlFor="shortMarginStep">Шаг маржи шорта</label>
+                <input
+                  name="shortMarginStep"
+                  id="shortMarginStep"
+                  {...register('shortMarginStep', {
+                    required: true,
+                    valueAsNumber: true,
+                  })}
+                  type="number"
+                  className="validate"
+                />
+              </Field>
+              <Field>
+                <label htmlFor="longMarginStep">Шаг маржи лонга</label>
+                <input
+                  name="longMarginStep"
+                  id="longMarginStep"
+                  {...register('longMarginStep', {
                     required: true,
                     valueAsNumber: true,
                   })}
