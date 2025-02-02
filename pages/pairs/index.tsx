@@ -12,7 +12,7 @@ export default function Pairs(): JSX.Element {
   const { request } = useHttp();
   const [pairs, setPairs] = useState<IPair[]>([]);
   const router = useRouter();
-  const { withSettings } = router.query;
+  const { withSettings, all } = router.query;
 
   const getPercent = (currentPrice, savingPrice, isShort?: boolean) => {
     const percent = (currentPrice / savingPrice) * 100 - 100;
@@ -42,7 +42,32 @@ export default function Pairs(): JSX.Element {
   const fetchPairs = useCallback(async () => {
     try {
       const data = await request<IPair[]>(`/scanprices/pairs/`, 'GET');
-      setPairs(transformPairs(data.sort((a, b) => a.order - b.order)));
+      const transformedData: IPair[] = transformPairs(
+        data.sort((a, b) => a.order - b.order),
+      );
+
+      if (all === 'true') {
+        setPairs(transformedData);
+      }
+
+      const canBeSold = [];
+      const needNextStep = [];
+      const needAutoBuy = [];
+
+      transformedData.forEach((pair) => {
+        if (pair.longPercent > 5 || pair.shortPercent > 5) {
+          canBeSold.push(pair);
+        } else if (
+          pair.nextBuyLongPriceWarning ||
+          pair.nextBuyShortPriceWarning
+        ) {
+          needNextStep.push(pair);
+        } else if (!pair.autoAddLongMargin || !pair.autoAddShortMargin) {
+          needAutoBuy.push(pair);
+        }
+      });
+
+      setPairs([...canBeSold, ...needNextStep, ...needAutoBuy]);
     } catch (e) {}
   }, [request]);
 
