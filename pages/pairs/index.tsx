@@ -11,8 +11,9 @@ import { Table } from '../../components/Table';
 export default function Pairs(): JSX.Element {
   const { request } = useHttp();
   const [pairs, setPairs] = useState<IPair[]>([]);
+  const [allData, setAllData] = useState(false);
   const router = useRouter();
-  const { withSettings, all } = router.query;
+  const { withSettings } = router.query;
 
   const getPercent = (currentPrice, savingPrice, isShort?: boolean) => {
     const percent = (currentPrice / savingPrice) * 100 - 100;
@@ -46,7 +47,7 @@ export default function Pairs(): JSX.Element {
         data.sort((a, b) => a.order - b.order),
       );
 
-      if (all === 'true') {
+      if (allData) {
         setPairs(transformedData);
       }
 
@@ -69,7 +70,7 @@ export default function Pairs(): JSX.Element {
 
       setPairs([...canBeSold, ...needNextStep, ...needAutoBuy]);
     } catch (e) {}
-  }, [request]);
+  }, [request, allData]);
 
   const deletePair = async (deletePairId) => {
     await request<IPair>(`/scanprices/pairs/${deletePairId}`, 'DELETE');
@@ -241,6 +242,10 @@ export default function Pairs(): JSX.Element {
   useEffect(() => {
     fetchPairs();
   }, []);
+
+  useEffect(() => {
+    setAllData(router.query?.allData === 'true');
+  }, [router.query?.allData]);
 
   useEffect(() => {
     setInterval(() => {
