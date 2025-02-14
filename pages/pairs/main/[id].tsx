@@ -185,11 +185,28 @@ const DetailPairPage = ({ pairId }) => {
                 />
               </Field>
               <Field>
-                <label htmlFor="buyCoefficient">Коэффициент покупки</label>
+                <label htmlFor="buyCoefficient">
+                  Коэффициент покупки лонга
+                </label>
                 <input
-                  name="buyCoefficient"
-                  id="buyCoefficient"
-                  {...register('buyCoefficient', {
+                  name="buyLongCoefficient"
+                  id="buyLongCoefficient"
+                  {...register('buyLongCoefficient', {
+                    required: true,
+                    valueAsNumber: true,
+                  })}
+                  type="number"
+                  className="validate"
+                />
+              </Field>
+              <Field>
+                <label htmlFor="buyCoefficient">
+                  Коэффициент покупки шорта
+                </label>
+                <input
+                  name="buyShortCoefficient"
+                  id="buyShortCoefficient"
+                  {...register('buyShortCoefficient', {
                     required: true,
                     valueAsNumber: true,
                   })}
