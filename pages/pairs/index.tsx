@@ -253,15 +253,14 @@ export default function Pairs(): JSX.Element {
       <Head>
         <title>Pairs - Scanprices</title>
       </Head>
-      <div
+
+      <Table
         style={{
-          width: '100%',
-          height: '100%',
           background: '#d7dae061',
         }}
-      >
-        <Table headings={tableHeads} tableBody={tableBody} />
-      </div>
+        headings={tableHeads}
+        tableBody={tableBody}
+      />
     </>
   );
 }
