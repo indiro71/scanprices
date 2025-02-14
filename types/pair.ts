@@ -7,7 +7,8 @@ export interface IPair {
   leverage: number;
   currentPrice: number;
   sellPercent: number;
-  buyCoefficient: number;
+  buyLongCoefficient: number;
+  buyShortCoefficient: number;
   profit: number;
   loss: number;
   shortMarginStep: number;

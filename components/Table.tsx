@@ -22,7 +22,7 @@ export const Table: FC<TableProps> = ({ headings, tableBody }) => {
         </tr>
       </thead>
 
-      <tbody className="bg-white divide-y divide-gray-200">
+      <tbody className="divide-y divide-gray-200">
         {tableBody &&
           tableBody.map((tableRow, index) => {
             return (

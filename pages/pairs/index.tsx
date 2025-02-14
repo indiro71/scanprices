@@ -15,50 +15,16 @@ export default function Pairs(): JSX.Element {
   const router = useRouter();
   const { withSettings } = router.query;
 
-  const getPercent = (currentPrice, savingPrice, isShort?: boolean) => {
-    const percent = (currentPrice / savingPrice) * 100 - 100;
-    return isShort ? -percent : percent;
-  };
-
   const transformPairs = (pairsData: IPair[]): any => {
     return pairsData.map((pairData) => {
-      const longPercent = getPercent(pairData.currentPrice, pairData.longPrice);
-      const longLeveragePercent = (longPercent * pairData.leverage).toFixed(2);
-      const shortPercent = getPercent(
-        pairData.currentPrice,
-        pairData.shortPrice,
-        true,
-      );
-      const shortLeveragePercent = (shortPercent * pairData.leverage).toFixed(
-        2,
-      );
+      const longLeveragePercent = pairData.longPercent.toFixed(2);
+      const shortLeveragePercent = pairData.shortPercent.toFixed(2);
       return {
         ...pairData,
         longPercent: longLeveragePercent,
         shortPercent: shortLeveragePercent,
       };
     });
-  };
-
-  const filteredData = () => {
-    const canBeSold = [];
-    const needNextStep = [];
-    const needAutoBuy = [];
-
-    pairs.forEach((pair) => {
-      if (pair.longPercent > 5 || pair.shortPercent > 5) {
-        canBeSold.push(pair);
-      } else if (
-        pair.nextBuyLongPriceWarning ||
-        pair.nextBuyShortPriceWarning
-      ) {
-        needNextStep.push(pair);
-      } else if (!pair.autoAddLongMargin || !pair.autoAddShortMargin) {
-        needAutoBuy.push(pair);
-      }
-    });
-
-    return [...canBeSold, ...needNextStep, ...needAutoBuy];
   };
 
   const fetchPairs = useCallback(async () => {
@@ -85,13 +51,13 @@ export default function Pairs(): JSX.Element {
         onChange={() => setAllData((prevState) => !prevState)}
       />
     </div>,
-    'Long | Short Percent',
-    'Long | Short Next',
+    'L|S Percent',
+    'L|S Next',
     'Price',
-    // 'Long | Short Critical',
-    'Long | Short Liquidation',
-    'Long | Short Sell',
-    'Long | Short Margin',
+    // 'L|S Critical',
+    'L|S Liquidation',
+    'L|S Sell',
+    'L|S Margin',
   ];
 
   const tableBody =
@@ -287,7 +253,15 @@ export default function Pairs(): JSX.Element {
       <Head>
         <title>Pairs - Scanprices</title>
       </Head>
-      <Table headings={tableHeads} tableBody={tableBody} />
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          background: '#d7dae061',
+        }}
+      >
+        <Table headings={tableHeads} tableBody={tableBody} />
+      </div>
     </>
   );
 }
