@@ -3,11 +3,12 @@ import React, { FC } from 'react';
 interface TableProps {
   headings: React.ReactNode[];
   tableBody: React.ReactNode[][];
+  style?: any;
 }
 
-export const Table: FC<TableProps> = ({ headings, tableBody }) => {
+export const Table: FC<TableProps> = ({ headings, tableBody, style }) => {
   return (
-    <table className="min-w-full divide-y divide-gray-200 my-2">
+    <table style={style} className="min-w-full divide-y divide-gray-200 my-2">
       <thead className="bg-gray-50">
         <tr>
           {headings.map((head, index) => (
