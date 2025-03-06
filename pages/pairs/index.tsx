@@ -12,6 +12,7 @@ export default function Pairs(): JSX.Element {
   const { request } = useHttp();
   const [pairs, setPairs] = useState<IPair[]>([]);
   const [allData, setAllData] = useState(false);
+  const [onlyPrice, setOnlyPrice] = useState(false);
   const router = useRouter();
   const { withSettings } = router.query;
 
@@ -44,14 +45,21 @@ export default function Pairs(): JSX.Element {
 
   const tableHeads = [
     <div>
-      Name &nbsp;
+      Name&nbsp;
       <input
         checked={allData}
         type="checkbox"
         onChange={() => setAllData((prevState) => !prevState)}
       />
     </div>,
-    'L|S Percent',
+    <div>
+      L|S&nbsp;Percent&nbsp;
+      <input
+        checked={onlyPrice}
+        type="checkbox"
+        onChange={() => setOnlyPrice((prevState) => !prevState)}
+      />
+    </div>,
     'L|S Next',
     'L|S Step',
     'Price',
@@ -65,16 +73,22 @@ export default function Pairs(): JSX.Element {
     pairs &&
     pairs
       .filter((pair) => {
-        if (!allData) return true;
+        if (allData) {
+          return (
+            pair.longPercent > 5 ||
+            pair.shortPercent > 5 ||
+            pair.nextBuyLongPriceWarning ||
+            pair.nextBuyShortPriceWarning ||
+            !pair.autoAddLongMargin ||
+            !pair.autoAddShortMargin
+          );
+        }
 
-        return (
-          pair.longPercent > 10 ||
-          pair.shortPercent > 10 ||
-          pair.nextBuyLongPriceWarning ||
-          pair.nextBuyShortPriceWarning ||
-          !pair.autoAddLongMargin ||
-          !pair.autoAddShortMargin
-        );
+        if (onlyPrice) {
+          return pair.longPercent > 1 || pair.shortPercent > 1;
+        }
+
+        return true;
       })
       .map((pair) => {
         const body = [
@@ -137,7 +151,10 @@ export default function Pairs(): JSX.Element {
               )}
           </div>,
           <div>
-            {pair.longMarginStep}&nbsp;|&nbsp;{pair.shortMarginStep}
+            {pair.longMarginStep}
+            <span className="text-xs"> ({pair?.buyLongCoefficient})</span>
+            &nbsp;|&nbsp;{pair.shortMarginStep}
+            <span className="text-xs"> ({pair?.buyShortCoefficient})</span>
           </div>,
           <div>
             {pair.currentPrice}{' '}
