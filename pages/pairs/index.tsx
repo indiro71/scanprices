@@ -15,6 +15,7 @@ export default function Pairs(): JSX.Element {
   const [onlyPrice, setOnlyPrice] = useState(false);
   const router = useRouter();
   const { withSettings } = router.query;
+  const liquidationPercent = 97;
 
   const transformPairs = (pairsData: IPair[]): any => {
     return pairsData.map((pairData) => {
@@ -80,12 +81,14 @@ export default function Pairs(): JSX.Element {
             pair.nextBuyLongPriceWarning ||
             pair.nextBuyShortPriceWarning ||
             !pair.autoAddLongMargin ||
-            !pair.autoAddShortMargin
+            !pair.autoAddShortMargin ||
+            pair?.longLiquidatePercent > liquidationPercent ||
+            pair?.shortLiquidatePercent > liquidationPercent
           );
         }
 
         if (onlyPrice) {
-          return pair.longPercent > 1 || pair.shortPercent > 1;
+          return pair.longPercent > 5 || pair.shortPercent > 5;
         }
 
         return true;
@@ -164,12 +167,12 @@ export default function Pairs(): JSX.Element {
           <div>
             <span
               className={
-                pair?.longLiquidatePrice > pair?.nextBuyLongPrice
+                pair?.longLiquidatePercent > liquidationPercent
                   ? 'text-red-500'
                   : 'text-green-500'
               }
             >
-              {pair?.longLiquidatePrice}
+              {pair?.longLiquidatePercent}
             </span>
             {!pair?.autoAddLongMargin && (
               <span className="text-red-500">*</span>
@@ -181,12 +184,12 @@ export default function Pairs(): JSX.Element {
             &nbsp;|&nbsp;
             <span
               className={
-                pair?.shortLiquidatePrice < pair?.nextBuyShortPrice
+                pair?.shortLiquidatePercent > liquidationPercent
                   ? 'text-red-500'
                   : 'text-green-500'
               }
             >
-              {pair?.shortLiquidatePrice}
+              {pair?.shortLiquidatePercent}
             </span>
             {!pair?.autoAddShortMargin && (
               <span className="text-red-500">*</span>
