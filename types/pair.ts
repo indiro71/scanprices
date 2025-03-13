@@ -32,6 +32,8 @@ export interface IPair {
   round: number;
   order: number;
   longLiquidatePrice: number;
+  longLiquidatePercent: number;
+  shortLiquidatePercent: number;
   nextBuyLongPrice: number;
   criticalBuyLongPrice: number;
   nextBuyLongPriceWarning: boolean;
