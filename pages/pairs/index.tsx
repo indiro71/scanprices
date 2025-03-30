@@ -62,7 +62,7 @@ export default function Pairs(): JSX.Element {
       />
     </div>,
     'L|S Next',
-    'L|S Step',
+    // 'L|S Step',
     'Price',
     // 'L|S Critical',
     'L|S Liquidation',
@@ -76,8 +76,8 @@ export default function Pairs(): JSX.Element {
       .filter((pair) => {
         if (allData) {
           return (
-            pair.longPercent > 5 ||
-            pair.shortPercent > 5 ||
+            pair.longPercent > 2 ||
+            pair.shortPercent > 2 ||
             pair.nextBuyLongPriceWarning ||
             pair.nextBuyShortPriceWarning ||
             !pair.autoAddLongMargin ||
@@ -153,12 +153,12 @@ export default function Pairs(): JSX.Element {
                 <span className="text-red-500">*</span>
               )}
           </div>,
-          <div>
-            {pair.longMarginStep}
-            <span className="text-xs"> ({pair?.buyLongCoefficient})</span>
-            &nbsp;|&nbsp;{pair.shortMarginStep}
-            <span className="text-xs"> ({pair?.buyShortCoefficient})</span>
-          </div>,
+          // <div>
+          //   {pair.longMarginStep}
+          //   <span className="text-xs"> ({pair?.buyLongCoefficient})</span>
+          //   &nbsp;|&nbsp;{pair.shortMarginStep}
+          //   <span className="text-xs"> ({pair?.buyShortCoefficient})</span>
+          // </div>,
           <div>
             {pair.currentPrice}{' '}
             <span className="text-xs"> ({pair?.ordersCount})</span>
