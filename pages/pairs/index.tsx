@@ -240,6 +240,16 @@ export default function Pairs(): JSX.Element {
         if (withSettings === 'true') {
           body.push(
             <div>
+              {pair.longMarginLimit} / {pair.shortMarginLimit}
+            </div>,
+          );
+          body.push(
+            <div>
+              {pair.buyLongCoefficient} / {pair.buyShortCoefficient}
+            </div>,
+          );
+          body.push(
+            <div>
               <Link href={`/pairs/${pair._id}`}>
                 <a className="link">IF</a>
               </Link>
@@ -255,6 +265,8 @@ export default function Pairs(): JSX.Element {
       });
 
   if (withSettings === 'true') {
+    tableHeads.push('L|S Margin Limit');
+    tableHeads.push('L|S Buy Coefficient');
     tableHeads.push('Set');
   }
 
