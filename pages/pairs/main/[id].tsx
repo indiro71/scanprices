@@ -94,6 +94,16 @@ const DetailPairPage = ({ pairId }) => {
                 />
               </Field>
               <Field>
+                <label htmlFor="exchange">Биржа</label>
+                <input
+                  name="exchange"
+                  id="exchange"
+                  {...register('exchange', { required: true })}
+                  type="text"
+                  className="validate"
+                />
+              </Field>
+              <Field>
                 <label htmlFor="shortMarginLimit">Лимит маржи шорта</label>
                 <input
                   name="shortMarginLimit"
@@ -145,19 +155,7 @@ const DetailPairPage = ({ pairId }) => {
                   className="validate"
                 />
               </Field>
-              <Field>
-                <label htmlFor="marginDifference">Разница маржи</label>
-                <input
-                  name="marginDifference"
-                  id="marginDifference"
-                  {...register('marginDifference', {
-                    required: true,
-                    valueAsNumber: true,
-                  })}
-                  type="number"
-                  className="validate"
-                />
-              </Field>
+
               <Field>
                 <label htmlFor="leverage">Плечо</label>
                 <input

@@ -74,6 +74,16 @@ export default function AddPair() {
                 className="validate"
               />
             </Field>
+            <Field>
+              <label htmlFor="exchange">Pair exchange</label>
+              <input
+                name="exchange"
+                id="exchange"
+                {...register('exchange', { required: true })}
+                type="text"
+                className="validate"
+              />
+            </Field>
             <Button type="submit" label="Add" name="action" />
           </form>
         )}

@@ -94,15 +94,18 @@ export default function Pairs(): JSX.Element {
         return true;
       })
       .map((pair) => {
+        const bybitLink = `https://www.bybit.com/trade/usdt/${pair.symbol}`;
+        const mexcLink = `https://futures.mexc.com/ru-RU/exchange/${pair.contract}`;
+
         const body = [
           <div>
             <a
               className="link"
               target="_blank"
               rel="noreferrer"
-              href={`https://futures.mexc.com/ru-RU/exchange/${pair.contract}`}
+              href={pair.exchange === 'MEXC' ? mexcLink : bybitLink}
             >
-              {pair.name}
+              ({pair.exchange.charAt(0)}) {pair.name}
             </a>
           </div>,
           <div>
