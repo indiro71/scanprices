@@ -4,6 +4,7 @@ export interface IPair {
   name: string;
   symbol: string;
   contract: string;
+  exchange: string;
   leverage: number;
   currentPrice: number;
   sellPercent: number;

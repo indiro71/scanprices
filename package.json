@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS=--openssl-legacy-provider next dev",
     "build": "next build",
     "format": "prettier --write \"./**/*.ts*\"",
     "start": "next start -p 3001"
