@@ -278,8 +278,8 @@ export default function Pairs(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    setAllData(router.query?.allData === 'true');
-  }, [router.query?.allData]);
+    setAllData(true);
+  }, []);
 
   useEffect(() => {
     setInterval(() => {
