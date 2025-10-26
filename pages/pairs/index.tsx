@@ -11,7 +11,7 @@ import { Table } from '../../components/Table';
 export default function Pairs(): JSX.Element {
   const { request } = useHttp();
   const [pairs, setPairs] = useState<IPair[]>([]);
-  const [allData, setAllData] = useState(false);
+  const [allData, setAllData] = useState(true);
   const [onlyPrice, setOnlyPrice] = useState(false);
   const router = useRouter();
   const { withSettings } = router.query;
@@ -76,8 +76,8 @@ export default function Pairs(): JSX.Element {
       .filter((pair) => {
         if (allData) {
           return (
-            pair.longPercent > 2 ||
-            pair.shortPercent > 2 ||
+            pair.longPercent > 0 ||
+            pair.shortPercent > 0 ||
             pair.nextBuyLongPriceWarning ||
             pair.nextBuyShortPriceWarning ||
             !pair.autoAddLongMargin ||
