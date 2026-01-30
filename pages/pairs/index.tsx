@@ -124,6 +124,8 @@ export default function Pairs(): JSX.Element {
         if (allData) {
           return (
             autoMargin ||
+            pair.nextBuyLongPriceWarning ||
+            pair.nextBuyShortPriceWarning ||
             pair?.longLiquidatePercent > liquidationPercent ||
             pair?.shortLiquidatePercent > liquidationPercent
           );
