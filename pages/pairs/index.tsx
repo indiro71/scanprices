@@ -11,8 +11,9 @@ import { Table } from '../../components/Table';
 export default function Pairs(): JSX.Element {
   const { request } = useHttp();
   const [pairs, setPairs] = useState<IPair[]>([]);
-  const [allData, setAllData] = useState(true);
+  const [allData, setAllData] = useState(false);
   const [onlyPrice, setOnlyPrice] = useState(false);
+  const [onlyNext, setOnlyNext] = useState(false);
   const router = useRouter();
   const { withSettings } = router.query;
   const liquidationPercent = 97;
@@ -44,24 +45,69 @@ export default function Pairs(): JSX.Element {
     fetchPairs();
   };
 
+  const handleOnlyNextChange = () => {
+    setOnlyNext((prev) => {
+      const next = !prev;
+
+      if (next) {
+        localStorage.setItem('onlyNext', 'true');
+      } else {
+        localStorage.removeItem('onlyNext');
+      }
+
+      return next;
+    });
+  };
+
+  const handleAllDataChange = () => {
+    setAllData((prev) => {
+      const next = !prev;
+
+      if (next) {
+        localStorage.setItem('allData', 'true');
+      } else {
+        localStorage.removeItem('allData');
+      }
+
+      return next;
+    });
+  };
+
+  const handleOnlyPriceChange = () => {
+    setOnlyPrice((prev) => {
+      const next = !prev;
+
+      if (next) {
+        localStorage.setItem('onlyPrice', 'true');
+      } else {
+        localStorage.removeItem('onlyPrice');
+      }
+
+      return next;
+    });
+  };
+
   const tableHeads = [
     <div>
       Name&nbsp;
-      <input
-        checked={allData}
-        type="checkbox"
-        onChange={() => setAllData((prevState) => !prevState)}
-      />
+      <input type="checkbox" checked={allData} onChange={handleAllDataChange} />
     </div>,
     <div>
       L|S&nbsp;Percent&nbsp;
       <input
-        checked={onlyPrice}
         type="checkbox"
-        onChange={() => setOnlyPrice((prevState) => !prevState)}
+        checked={onlyPrice}
+        onChange={handleOnlyPriceChange}
       />
     </div>,
-    'L|S Next',
+    <div>
+      L|S&nbsp;Next&nbsp;
+      <input
+        type="checkbox"
+        checked={onlyNext}
+        onChange={handleOnlyNextChange}
+      />
+    </div>,
     // 'L|S Step',
     'Price',
     // 'L|S Critical',
@@ -74,21 +120,27 @@ export default function Pairs(): JSX.Element {
     pairs &&
     pairs
       .filter((pair) => {
+        const autoMargin = !pair.autoAddLongMargin || !pair.autoAddShortMargin;
         if (allData) {
           return (
-            pair.longPercent > 0 ||
-            pair.shortPercent > 0 ||
-            pair.nextBuyLongPriceWarning ||
-            pair.nextBuyShortPriceWarning ||
-            !pair.autoAddLongMargin ||
-            !pair.autoAddShortMargin ||
+            autoMargin ||
             pair?.longLiquidatePercent > liquidationPercent ||
             pair?.shortLiquidatePercent > liquidationPercent
           );
         }
 
         if (onlyPrice) {
-          return pair.longPercent > 5 || pair.shortPercent > 5;
+          return autoMargin || pair.longPercent > 10 || pair.shortPercent > 10;
+        }
+
+        if (onlyNext) {
+          return (
+            autoMargin ||
+            (pair?.nextBuyLongPrice &&
+              pair?.currentPrice < pair?.nextBuyLongPrice) ||
+            (pair?.nextBuyShortPrice &&
+              pair?.currentPrice > pair?.nextBuyShortPrice)
+          );
         }
 
         return true;
@@ -278,13 +330,17 @@ export default function Pairs(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    setAllData(true);
-  }, []);
-
-  useEffect(() => {
     setInterval(() => {
       fetchPairs();
     }, 5000);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setAllData(localStorage.getItem('allData') === 'true');
+      setOnlyPrice(localStorage.getItem('onlyPrice') === 'true');
+      setOnlyNext(localStorage.getItem('onlyNext') === 'true');
+    }
   }, []);
 
   return (
