@@ -121,28 +121,32 @@ export default function Pairs(): JSX.Element {
     pairs
       .filter((pair) => {
         const autoMargin = !pair.autoAddLongMargin || !pair.autoAddShortMargin;
+        const forAllData =
+          pair.nextBuyLongPriceWarning ||
+          pair.nextBuyShortPriceWarning ||
+          pair?.longLiquidatePercent > liquidationPercent ||
+          pair?.shortLiquidatePercent > liquidationPercent;
+        const forOnlyPrice = pair.longPercent > 10 || pair.shortPercent > 10;
+        const forOnlyNext =
+          (pair?.nextBuyLongPrice &&
+            pair?.currentPrice < pair?.nextBuyLongPrice) ||
+          (pair?.nextBuyShortPrice &&
+            pair?.currentPrice > pair?.nextBuyShortPrice);
+
         if (allData) {
-          return (
-            autoMargin ||
-            pair.nextBuyLongPriceWarning ||
-            pair.nextBuyShortPriceWarning ||
-            pair?.longLiquidatePercent > liquidationPercent ||
-            pair?.shortLiquidatePercent > liquidationPercent
-          );
+          return autoMargin || forAllData;
+        }
+
+        if (onlyPrice && onlyNext) {
+          return autoMargin || forOnlyPrice || forOnlyNext;
         }
 
         if (onlyPrice) {
-          return autoMargin || pair.longPercent > 10 || pair.shortPercent > 10;
+          return autoMargin || forOnlyPrice;
         }
 
         if (onlyNext) {
-          return (
-            autoMargin ||
-            (pair?.nextBuyLongPrice &&
-              pair?.currentPrice < pair?.nextBuyLongPrice) ||
-            (pair?.nextBuyShortPrice &&
-              pair?.currentPrice > pair?.nextBuyShortPrice)
-          );
+          return autoMargin || forOnlyNext;
         }
 
         return true;
