@@ -112,7 +112,7 @@ export default function Pairs(): JSX.Element {
     'Price',
     // 'L|S Critical',
     'L|S Liquidation',
-    'L|S Sell',
+    // 'L|S Sell',
     'L|S Margin',
   ];
 
@@ -126,7 +126,7 @@ export default function Pairs(): JSX.Element {
           pair.nextBuyShortPriceWarning ||
           pair?.longLiquidatePercent > liquidationPercent ||
           pair?.shortLiquidatePercent > liquidationPercent;
-        const forOnlyPrice = pair.longPercent > 10 || pair.shortPercent > 10;
+        const forOnlyPrice = pair.longPercent >= 13 || pair.shortPercent >= 13;
         const forOnlyNext =
           (pair?.nextBuyLongPrice &&
             pair?.currentPrice < pair?.nextBuyLongPrice) ||
@@ -261,21 +261,21 @@ export default function Pairs(): JSX.Element {
               )}
           </div>,
 
-          <div className="cursor-pointer">
-            <span
-              onClick={() => copy(`${pair?.sellLongPrice}`)}
-              className={pair?.sellLongPriceWarning ? '' : 'text-green-500'}
-            >
-              {pair?.sellLongPrice}
-            </span>
-            &nbsp;|&nbsp;
-            <span
-              onClick={() => copy(`${pair?.sellShortPrice}`)}
-              className={pair?.sellShortPriceWarning ? '' : 'text-green-500'}
-            >
-              {pair?.sellShortPrice}
-            </span>
-          </div>,
+          // <div className="cursor-pointer">
+          //   <span
+          //     onClick={() => copy(`${pair?.sellLongPrice}`)}
+          //     className={pair?.sellLongPriceWarning ? '' : 'text-green-500'}
+          //   >
+          //     {pair?.sellLongPrice}
+          //   </span>
+          //   &nbsp;|&nbsp;
+          //   <span
+          //     onClick={() => copy(`${pair?.sellShortPrice}`)}
+          //     className={pair?.sellShortPriceWarning ? '' : 'text-green-500'}
+          //   >
+          //     {pair?.sellShortPrice}
+          //   </span>
+          // </div>,
 
           <div>
             <span>
