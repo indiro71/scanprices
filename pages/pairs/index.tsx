@@ -122,8 +122,6 @@ export default function Pairs(): JSX.Element {
       .filter((pair) => {
         const autoMargin = !pair.autoAddLongMargin || !pair.autoAddShortMargin;
         const forAllData =
-          pair.nextBuyLongPriceWarning ||
-          pair.nextBuyShortPriceWarning ||
           pair?.longLiquidatePercent > liquidationPercent ||
           pair?.shortLiquidatePercent > liquidationPercent;
         const forOnlyPrice = pair.longPercent >= 13 || pair.shortPercent >= 13;
@@ -187,14 +185,15 @@ export default function Pairs(): JSX.Element {
             <span
               onClick={() => copy(`${pair?.nextBuyLongPrice}`)}
               className={
-                pair?.nextBuyLongPriceWarning
-                  ? 'text-red-500'
-                  : 'text-green-500'
+                !!pair?.nextBuyLongPrice &&
+                pair?.currentPrice < pair?.nextBuyLongPrice
+                  ? 'text-green-500'
+                  : 'text-red-500'
               }
             >
               {pair?.nextBuyLongPrice}
             </span>
-            {pair?.nextBuyLongPriceWarning &&
+            {!!pair?.nextBuyLongPrice &&
               pair?.currentPrice < pair?.nextBuyLongPrice && (
                 <span className="text-red-500">*</span>
               )}
@@ -202,14 +201,15 @@ export default function Pairs(): JSX.Element {
             <span
               onClick={() => copy(`${pair?.nextBuyShortPrice}`)}
               className={
-                pair?.nextBuyShortPriceWarning
-                  ? 'text-red-500'
-                  : 'text-green-500'
+                !!pair?.nextBuyShortPrice &&
+                pair?.currentPrice > pair?.nextBuyShortPrice
+                  ? 'text-green-500'
+                  : 'text-red-500'
               }
             >
               {pair?.nextBuyShortPrice}
             </span>
-            {pair?.nextBuyShortPriceWarning &&
+            {!!pair?.nextBuyShortPrice &&
               pair?.currentPrice > pair?.nextBuyShortPrice && (
                 <span className="text-red-500">*</span>
               )}
@@ -220,11 +220,7 @@ export default function Pairs(): JSX.Element {
           //   &nbsp;|&nbsp;{pair.shortMarginStep}
           //   <span className="text-xs"> ({pair?.buyShortCoefficient})</span>
           // </div>,
-          <div>
-            {pair.currentPrice}{' '}
-            <span className="text-xs"> ({pair?.ordersCount})</span>
-          </div>,
-
+          <div>{pair.currentPrice}</div>,
           <div>
             <span
               className={
